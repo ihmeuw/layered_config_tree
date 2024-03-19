@@ -1,0 +1,77 @@
+Metadata-Version: 2.1
+Name: vivarium
+Version: 1.2.0
+Summary: vivarium is a microsimulation framework built on top of the standard scientific python stack.
+Home-page: https://github.com/ihmeuw/vivarium
+Author: The vivarium developers
+Author-email: vivarium.dev@gmail.com
+License: BSD-3-Clause
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Education
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)
+Classifier: Natural Language :: English
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Operating System :: POSIX
+Classifier: Operating System :: POSIX :: BSD
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Topic :: Education
+Classifier: Topic :: Scientific/Engineering
+Classifier: Topic :: Scientific/Engineering :: Artificial Life
+Classifier: Topic :: Scientific/Engineering :: Mathematics
+Classifier: Topic :: Scientific/Engineering :: Medical Science Apps.
+Classifier: Topic :: Scientific/Engineering :: Physics
+Classifier: Topic :: Software Development :: Libraries
+Provides-Extra: docs
+Provides-Extra: test
+Provides-Extra: interactive
+Provides-Extra: dev
+License-File: LICENSE.txt
+
+========
+Vivarium
+========
+
+.. image:: https://badge.fury.io/py/vivarium.svg
+    :target: https://badge.fury.io/py/vivarium
+
+.. image:: https://travis-ci.org/ihmeuw/vivarium.svg?branch=master
+    :target: https://travis-ci.org/ihmeuw/vivarium
+    :alt: Latest Version
+
+.. image:: https://readthedocs.org/projects/vivarium/badge/?version=latest
+    :target: https://vivarium.readthedocs.io/en/latest/?badge=latest
+    :alt: Latest Docs
+
+.. image:: https://zenodo.org/badge/96817805.svg
+   :target: https://zenodo.org/badge/latestdoi/96817805
+
+Vivarium is a simulation framework written using standard scientific Python
+tools.
+
+**Vivarium requires Python 3.8-3.11 to run**
+
+You can install ``vivarium`` from PyPI with pip:
+
+  ``> pip install vivarium``
+
+or build it from source with
+
+  ``> git clone https://github.com/ihmeuw/vivarium.git``
+
+  ``> cd vivarium``
+
+  ``> python setup.py install``
+
+This will make the ``vivarium`` library available to python and install a
+command-line executable called ``simulate`` that you can use to verify your
+installation with
+
+  ``> simulate test``
+
+
+`Check out the docs! <https://vivarium.readthedocs.io/en/latest/>`_
+-------------------------------------------------------------------

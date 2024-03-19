@@ -1,0 +1,2 @@
+[console_scripts]
+simulate = vivarium.interface.cli:simulate

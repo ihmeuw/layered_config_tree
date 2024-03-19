@@ -1,0 +1,42 @@
+Results of doctest builder run on 2023-05-26 13:05:51
+=====================================================
+
+Document: tutorials/disease_model
+---------------------------------
+1 items passed all tests:
+   2 tests in default
+2 tests in 1 items.
+2 passed and 0 failed.
+Test passed.
+
+Document: tutorials/exploration
+-------------------------------
+2 items passed all tests:
+   1 tests in configuration
+   5 tests in default
+6 tests in 2 items.
+6 passed and 0 failed.
+Test passed.
+
+Document: tutorials/running_a_simulation/interactive
+----------------------------------------------------
+1 items passed all tests:
+   4 tests in default
+4 tests in 1 items.
+4 passed and 0 failed.
+Test passed.
+
+Document: tutorials/boids
+-------------------------
+1 items passed all tests:
+   2 tests in default
+2 tests in 1 items.
+2 passed and 0 failed.
+Test passed.
+
+Doctest summary
+===============
+   14 tests
+    0 failures in tests
+    0 failures in setup code
+    0 failures in cleanup code
