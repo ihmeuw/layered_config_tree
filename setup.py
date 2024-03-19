@@ -7,7 +7,7 @@ if not (min_version[0] <= sys.version_info[:2] <= max_version[0]):
     py_version = ".".join([str(v) for v in sys.version_info[:3]])
     error = (
         "\n----------------------------------------\n"
-        "Error: Vivarium runs under python {min_version}-{max_version}.\n"
+        "Error: Config Tree runs under python {min_version}-{max_version}.\n"
         "You are running python {py_version}".format(
             min_version=min_version[1], max_version=max_version[1], py_version=py_version
         )
@@ -24,7 +24,7 @@ if __name__ == "__main__":
     src_dir = base_dir / "src"
 
     about = {}
-    with (src_dir / "vivarium" / "__about__.py").open() as f:
+    with (src_dir / "config_tree" / "__about__.py").open() as f:
         exec(f.read(), about)
 
     with (base_dir / "README.rst").open() as f:
@@ -105,11 +105,11 @@ if __name__ == "__main__":
         },
         entry_points="""
                 [console_scripts]
-                simulate=vivarium.interface.cli:simulate
+                simulate=config_tree.interface.cli:simulate
             """,
         zip_safe=False,
         use_scm_version={
-            "write_to": "src/vivarium/_version.py",
+            "write_to": "src/config_tree/_version.py",
             "write_to_template": '__version__ = "{version}"\n',
             "tag_regex": r"^(?P<prefix>v)?(?P<version>[^\+]+)(?P<suffix>.*)?$",
         },
