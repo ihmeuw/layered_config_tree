@@ -1,4 +1,7 @@
 import sys
+from pathlib import Path
+
+from setuptools import find_packages, setup
 
 min_version, max_version = ((3, 8), "3.8"), ((3, 11), "3.11")
 
@@ -15,9 +18,6 @@ if not (min_version[0] <= sys.version_info[:2] <= max_version[0]):
     print(error, file=sys.stderr)
     sys.exit(1)
 
-from pathlib import Path
-
-from setuptools import find_packages, setup
 
 if __name__ == "__main__":
     base_dir = Path(__file__).parent
