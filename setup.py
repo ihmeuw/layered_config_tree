@@ -31,7 +31,7 @@ if __name__ == "__main__":
         long_description = f.read()
 
     install_requirements = ["pyyaml>=5.1"]
-    setup_requires = ["setuptools_scm"]
+    setup_requirements = ["setuptools_scm"]
     test_requirements = [
         "pytest",
         "pytest-mock",
@@ -90,5 +90,5 @@ if __name__ == "__main__":
             "write_to_template": '__version__ = "{version}"\n',
             "tag_regex": r"^(?P<prefix>v)?(?P<version>[^\+]+)(?P<suffix>.*)?$",
         },
-        setup_requires=setup_requires,
+        setup_requires=setup_requirements,
     )

@@ -9,8 +9,8 @@ from config_tree.__about__ import (
 )
 from config_tree._version import __version__
 from config_tree.config_tree import (
-    ConfigTree,
     ConfigNode,
+    ConfigTree,
     ConfigurationError,
     ConfigurationKeyError,
     DuplicatedConfigurationError,
