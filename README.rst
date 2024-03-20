@@ -18,7 +18,7 @@ or build it from source with
 
   ``> conda create -n ENVIRONMENT_NAME python=3.11``
 
-  ``> pip install -e .[dev]``
+  ``> pip install .``
 
 This will make the ``config_tree`` library available to python.
 
