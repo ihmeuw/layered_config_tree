@@ -8,12 +8,12 @@ __all__ = [
     "__copyright__",
 ]
 
-__title__ = "vivarium"
-__summary__ = "vivarium is a microsimulation framework built on top of the standard scientific python stack."
-__uri__ = "https://github.com/ihmeuw/vivarium"
+__title__ = "config_tree"
+__summary__ = "Config Tree is a configuration structure which supports cascading layers."
+__uri__ = "https://github.com/ihmeuw/config_tree"
 
 __author__ = "The vivarium developers"
 __email__ = "vivarium.dev@gmail.com"
 
 __license__ = "BSD-3-Clause"
-__copyright__ = f"Copyright 2016-2023 {__author__}"
+__copyright__ = f"Copyright 2016-2024 {__author__}"

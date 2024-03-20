@@ -30,30 +30,12 @@ if __name__ == "__main__":
     with (base_dir / "README.rst").open() as f:
         long_description = f.read()
 
-    install_requirements = [
-        "numpy",
-        "pandas",
-        "pyyaml>=5.1",
-        "scipy",
-        "click",
-        "tables",
-        "networkx",
-        "loguru",
-    ]
-
+    install_requirements = ["pyyaml>=5.1"]
     setup_requires = ["setuptools_scm"]
-
-    interactive_requirements = [
-        "IPython",
-        "ipywidgets",
-        "jupyter",
-    ]
-
     test_requirements = [
         "pytest",
         "pytest-mock",
     ]
-
     doc_requirements = [
         "sphinx>=4.0",
         "sphinx-rtd-theme",
@@ -100,8 +82,7 @@ if __name__ == "__main__":
         extras_require={
             "docs": doc_requirements,
             "test": test_requirements,
-            "interactive": interactive_requirements,
-            "dev": doc_requirements + test_requirements + interactive_requirements,
+            "dev": doc_requirements + test_requirements,
         },
         zip_safe=False,
         use_scm_version={
