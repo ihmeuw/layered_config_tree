@@ -103,10 +103,6 @@ if __name__ == "__main__":
             "interactive": interactive_requirements,
             "dev": doc_requirements + test_requirements + interactive_requirements,
         },
-        entry_points="""
-                [console_scripts]
-                simulate=config_tree.interface.cli:simulate
-            """,
         zip_safe=False,
         use_scm_version={
             "write_to": "src/config_tree/_version.py",

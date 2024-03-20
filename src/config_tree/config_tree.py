@@ -5,13 +5,10 @@ The Config Tree
 
 A configuration structure which supports cascading layers.
 
-In ``vivarium`` it allows base configurations to be overridden by component
-level configurations which are in turn overridden by model level configuration
-which can be overridden by user supplied overrides. From the perspective
-of normal client code the cascading is hidden and configuration values
-are presented as attributes of the configuration object the values of
-which are the value of that key in the outermost layer of configuration
-where it appears.
+Config Tree allows base configurations to be overridden by multiple layers with
+cascading priorities. The configuration values are presented as attributes of the
+configuration object and are the value of the keys in the outermost layer of
+configuration where they appear.
 
 For example:
 
@@ -34,10 +31,8 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple, Union
 
 import yaml
 
-from vivarium.exceptions import VivariumError
 
-
-class ConfigurationError(VivariumError):
+class ConfigurationError(Exception):
     """Base class for configuration errors."""
 
     def __init__(self, message: str, value_name: Optional[str]):

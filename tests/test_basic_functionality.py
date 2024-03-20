@@ -4,7 +4,7 @@ import textwrap
 import pytest
 import yaml
 
-from vivarium.config_tree import (
+from config_tree import (
     ConfigNode,
     ConfigTree,
     ConfigurationError,
