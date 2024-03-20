@@ -17,9 +17,10 @@ import sys
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 from pathlib import Path
 
-import config_tree
 from docutils.nodes import Text
 from sphinx.ext.intersphinx import missing_reference
+
+import config_tree
 
 base_dir = Path(config_tree.__file__).parent
 
