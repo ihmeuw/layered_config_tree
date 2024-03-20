@@ -3,7 +3,7 @@
 The Config Tree
 ===============
 
-A configuration structure which supports cascading layers.
+A configuration structure that supports cascading layers.
 
 Config Tree allows base configurations to be overridden by multiple layers with
 cascading priorities. The configuration values are presented as attributes of the

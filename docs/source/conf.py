@@ -17,11 +17,11 @@ import sys
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 from pathlib import Path
 
-import vivarium
+import config_tree
 from docutils.nodes import Text
 from sphinx.ext.intersphinx import missing_reference
 
-base_dir = Path(vivarium.__file__).parent
+base_dir = Path(config_tree.__file__).parent
 
 about = {}
 with (base_dir / "__about__.py").open() as f:
@@ -32,13 +32,13 @@ sys.path.insert(0, str(Path("..").resolve()))
 # -- Project information -----------------------------------------------------
 
 project = about["__title__"]
-copyright = f'2023, {about["__author__"]}'
+copyright = f'2024, {about["__author__"]}'
 author = about["__author__"]
 
 # The short X.Y version.
-version = vivarium.__version__
+version = config_tree.__version__
 # The full version, including alpha/beta/rc tags.
-release = vivarium.__version__
+release = config_tree.__version__
 
 
 # -- General configuration ------------------------------------------------
@@ -196,10 +196,6 @@ texinfo_documents = [
 # Other docs we can link to
 intersphinx_mapping = {
     "python": ("https://docs.python.org/", None),
-    "pandas": ("https://pandas.pydata.org/pandas-docs/stable/", None),
-    "tables": ("https://www.pytables.org/", None),
-    "numpy": ("https://numpy.org/doc/stable/", None),
-    "networkx": ("https://networkx.org/documentation/stable/", None),
 }
 
 
@@ -227,12 +223,12 @@ autodoc_typehints = "description"
 nitpicky = True
 
 nitpick_ignore = []
-for line in open("../nitpick-exceptions"):
-    if line.strip() == "" or line.startswith("#"):
-        continue
-    dtype, target = line.split(None, 1)
-    target = target.strip()
-    nitpick_ignore.append((dtype, target))
+# for line in open("../nitpick-exceptions"):
+#     if line.strip() == "" or line.startswith("#"):
+#         continue
+#     dtype, target = line.split(None, 1)
+#     target = target.strip()
+#     nitpick_ignore.append((dtype, target))
 
 
 # Fix sphinx warnings when for literal Ellipses in type hints.

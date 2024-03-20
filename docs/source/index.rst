@@ -1,15 +1,7 @@
-======================
-Vivarium Documentation
-======================
+=========================
+Config Tree Documentation
+=========================
 
-Vivarium is a framework for building complex simulations using standard
-`scientific Python <https://www.scipy.org/>`_ tools.
+Config Tree is a configuration structure which supports cascading layers.
 
-.. toctree::
-   :maxdepth: 2
-
-   installation
-   tutorials/index
-   concepts/index
-   api_reference/index
-   glossary
+TBD.
