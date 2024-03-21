@@ -1,17 +1,17 @@
 components:
-    vivarium:
-        test_util:
-            - TestPopulation()
-        framework:
-            - randomness.RandomnessManager()
-            - event.EventManager()
+    system_module:
+        utility_tests:
+            - TestModule()
+        core_framework:
+            - module.ModuleA()
+            - module.ModuleB()
 
 configuration:
-    time:
+    simulation_period:
         start:
-            year: 2005
+            cycle: 1000
         end:
-            year: 2010
-        step_size: 30.5  # Days
-    randomness:
-        map_size: 1000
+            cycle: 5000
+        interval: 30.5
+    randomness_control:
+        grid_size: 1000
