@@ -6,7 +6,11 @@ Layered Config Tree is a configuration structure that supports cascading layers.
 
 **Layered Config Tree requires Python 3.8-3.11 to run**
 
-You can build ``layered_config_tree`` from from source with
+You can install ``layered_config_tree`` from PyPI with pip:
+
+  ``> pip install layered_config_tree``
+
+or build it from from source:
 
   ``> git clone https://github.com/ihmeuw/layered_config_tree.git``
 
