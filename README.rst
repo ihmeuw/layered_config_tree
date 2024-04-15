@@ -4,7 +4,7 @@ Layered Config Tree
 
 Layered Config Tree is a configuration structure that supports cascading layers.
 
-**Layered Config Tree requires Python 3.8-3.11 to run**
+**Supported Python versions: 3.6, 3.7**
 
 You can install ``layered_config_tree`` from PyPI with pip:
 
@@ -16,7 +16,7 @@ or build it from from source:
 
   ``> cd layered_config_tree``
 
-  ``> conda create -n ENVIRONMENT_NAME python=3.11``
+  ``> conda create -n ENVIRONMENT_NAME python=3.7``
 
   ``> pip install .``
 
