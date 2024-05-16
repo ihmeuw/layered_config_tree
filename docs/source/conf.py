@@ -17,7 +17,7 @@ import sys
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 from pathlib import Path
 
-from docutils.nodes import Text
+from docutils.nodes import Text  # import-untyped
 from sphinx.ext.intersphinx import missing_reference
 
 import layered_config_tree

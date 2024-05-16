@@ -33,14 +33,19 @@ if __name__ == "__main__":
     base_dir = Path(__file__).parent
     src_dir = base_dir / "src"
 
-    about = {}
+    about: dict[str, str] = {}
     with (src_dir / "layered_config_tree" / "__about__.py").open() as f:
         exec(f.read(), about)
 
     with (base_dir / "README.rst").open() as f:
         long_description = f.read()
 
-    install_requirements = ["pyyaml>=5.1"]
+    install_requirements = [
+        "pyyaml>=5.1",
+        # typing stub packages
+        "types-PyYAML",
+        "types-setuptools",
+    ]
     setup_requirements = ["setuptools_scm"]
     test_requirements = [
         "pytest",

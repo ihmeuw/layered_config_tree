@@ -7,7 +7,7 @@ from layered_config_tree.__about__ import (
     __title__,
     __uri__,
 )
-from layered_config_tree._version import __version__
+from layered_config_tree._version import __version__  # import-untyped
 from layered_config_tree.exceptions import (
     ConfigurationError,
     ConfigurationKeyError,
