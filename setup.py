@@ -1,6 +1,7 @@
 import json
 import sys
 from pathlib import Path
+from typing import Union
 
 from packaging.version import parse
 from setuptools import find_packages, setup
@@ -33,7 +34,7 @@ if __name__ == "__main__":
     base_dir = Path(__file__).parent
     src_dir = base_dir / "src"
 
-    about = {}
+    about: dict[str, str] = {}
     with (src_dir / "layered_config_tree" / "__about__.py").open() as f:
         exec(f.read(), about)
 
