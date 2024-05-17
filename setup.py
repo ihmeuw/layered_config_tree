@@ -1,7 +1,6 @@
 import json
 import sys
 from pathlib import Path
-from typing import Union
 
 from packaging.version import parse
 from setuptools import find_packages, setup
