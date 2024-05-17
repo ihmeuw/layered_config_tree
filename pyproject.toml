@@ -13,7 +13,7 @@ profile = "black"
 strict = true  # See all the enabled flags `mypy --help | grep -A 10 'Strict mode'`
 disallow_any_unimported = false
 exclude = [
-    # "_templates",
+    "build",
 ]
 
 # handle mypy errors when 3rd party packages are not typed.

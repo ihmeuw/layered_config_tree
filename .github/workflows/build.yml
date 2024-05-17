@@ -51,7 +51,7 @@ jobs:
           pip install black==22.3.0 isort mypy
           black . --check --diff
           isort . --check --verbose --only-modified --diff
-          mypy .
+          mypy . --verbose
       - name: Test
         run: |
           if "${{ github.event_name == 'schedule' }}"; then
