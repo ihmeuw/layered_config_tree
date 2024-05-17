@@ -72,7 +72,8 @@ class ConfigNode:
     def __init__(self, layers: List[str], name: str):
         self._name = name
         self._layers = layers
-        self._values = {}
+        self._values: Dict[str, Tuple[str, Any]] = {}
+        # self._values = {}
         self._frozen = False
         self._accessed = False
 
@@ -230,6 +231,9 @@ class LayeredConfigTree:
     is determined by the outermost layer which has the key defined.
 
     """
+
+    # Define type annotation of _children here since it's indirectly defined below
+    _children: Dict[str, Union["LayeredConfigTree", "ConfigNode"]]
 
     def __init__(
         self,

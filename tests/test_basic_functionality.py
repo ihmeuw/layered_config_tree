@@ -138,6 +138,7 @@ def test_node_get_value_with_source(full_node: ConfigNode) -> None:
     )
 
     for i, layer in enumerate(full_node._layers):
+        breakpoint()
         assert full_node._get_value_with_source(layer=layer) == (None, f"test_value_{i+1}")
 
     assert not full_node.accessed
