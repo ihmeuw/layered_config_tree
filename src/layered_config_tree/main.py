@@ -73,7 +73,6 @@ class ConfigNode:
         self._name = name
         self._layers = layers
         self._values: Dict[str, Tuple[str, Any]] = {}
-        # self._values = {}
         self._frozen = False
         self._accessed = False
 
