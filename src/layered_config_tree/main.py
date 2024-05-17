@@ -99,7 +99,7 @@ class ConfigNode:
                 )
         return result
 
-    def freeze(self):
+    def freeze(self) -> None:
         """Causes the :class:`ConfigNode` node to become read only.
 
         This can be used to create a contract around when the configuration is
@@ -129,7 +129,7 @@ class ConfigNode:
         self._accessed = True
         return value
 
-    def update(self, value: Any, layer: Optional[str], source: Optional[str]):
+    def update(self, value: Any, layer: Optional[str], source: Optional[str]) -> None:
         """Set a value for a layer with optional metadata about source.
 
         Parameters
@@ -204,17 +204,17 @@ class ConfigNode:
             f"No value stored in this ConfigNode {self.name}.", self.name
         )
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         return bool(self._values)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         out = []
         for m in reversed(self.metadata):
             layer, source, value = m.values()
             out.append(f"{layer}: {value}\n    source: {source}")
         return "\n".join(out)
 
-    def __str__(self):
+    def __str__(self) -> str:
         if not self:
             return ""
         layer, _, value = self.metadata[-1].values()
@@ -270,7 +270,7 @@ class LayeredConfigTree:
         self.__dict__["_name"] = name
         self.update(data, layer=self._layers[0], source="initial data")
 
-    def freeze(self):
+    def freeze(self) -> None:
         """Causes the LayeredConfigTree to become read only.
 
         This is useful for loading and then freezing configurations that
@@ -348,7 +348,7 @@ class LayeredConfigTree:
         data: Union[Dict, str, Path, "LayeredConfigTree", None],
         layer: str = None,
         source: str = None,
-    ):
+    ) -> None:
         """Adds additional data into the :class:`LayeredConfigTree`.
 
         Parameters
@@ -426,7 +426,7 @@ class LayeredConfigTree:
 
     def _set_with_metadata(
         self, name: str, value: Any, layer: Optional[str], source: Optional[str]
-    ):
+    ) -> None:
         """Set a value in the named layer with the given source.
 
         Parameters
@@ -479,7 +479,7 @@ class LayeredConfigTree:
 
         self._children[name].update(value, layer, source)
 
-    def __setattr__(self, name, value):
+    def __setattr__(self, name: str, value: Any) -> None:
         """Set a value on the outermost layer."""
         if name not in self:
             raise ConfigurationKeyError(
@@ -488,7 +488,7 @@ class LayeredConfigTree:
             )
         self._set_with_metadata(name, value, layer=None, source=None)
 
-    def __setitem__(self, name, value):
+    def __setitem__(self, name: str, value: Any) -> None:
         """Set a value on the outermost layer."""
         if name not in self:
             raise ConfigurationKeyError(
@@ -497,7 +497,7 @@ class LayeredConfigTree:
             )
         self._set_with_metadata(name, value, layer=None, source=None)
 
-    def __getattr__(self, name):
+    def __getattr__(self, name: str) -> Any:
         """Get a value from the outermost layer in which it appears."""
         return self.get_from_layer(name)
 
@@ -509,40 +509,40 @@ class LayeredConfigTree:
     # * Calling __getattr__ before we have set up the state doesn't work,
     #   because it leads to an infinite loop looking for the module's
     #   actual attributes (not config keys)
-    def __getstate__(self):
+    def __getstate__(self) -> dict[str, Any]:
         return self.__dict__
 
-    def __setstate__(self, state: Dict):
+    def __setstate__(self, state: Dict) -> None:
         for k, v in state.items():
             self.__dict__[k] = v
 
-    def __getitem__(self, name):
+    def __getitem__(self, name: str) -> Any:
         """Get a value from the outermost layer in which it appears."""
         return self.get_from_layer(name)
 
-    def __delattr__(self, name):
+    def __delattr__(self, name: str) -> None:
         if name in self:
             del self._children[name]
 
-    def __delitem__(self, name):
+    def __delitem__(self, name: str) -> None:
         if name in self:
             del self._children[name]
 
-    def __contains__(self, name):
+    def __contains__(self, name: str) -> bool:
         """Test if a configuration key exists in any layer."""
         return name in self._children
 
-    def __iter__(self):
+    def __iter__(self) -> Iterable[str]:
         """Dictionary-like iteration."""
         return iter(self._children)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self._children)
 
-    def __dir__(self):
+    def __dir__(self) -> list[str]:
         return list(self._children.keys()) + dir(super(LayeredConfigTree, self))
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "\n".join(
             [
                 "{}:\n    {}".format(name, repr(c).replace("\n", "\n    "))
@@ -550,7 +550,7 @@ class LayeredConfigTree:
             ]
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "\n".join(
             [
                 "{}:\n    {}".format(name, str(c).replace("\n", "\n    "))
@@ -558,5 +558,5 @@ class LayeredConfigTree:
             ]
         )
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         raise NotImplementedError

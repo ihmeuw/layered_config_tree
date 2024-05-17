@@ -1,5 +1,6 @@
 import pickle
 import textwrap
+from pathlib import Path
 
 import pytest
 import yaml
@@ -14,22 +15,22 @@ from layered_config_tree import (
 
 
 @pytest.fixture(params=list(range(1, 5)))
-def layers(request):
+def layers(request: pytest.FixtureRequest) -> list[str]:
     return [f"layer_{i}" for i in range(1, request.param + 1)]
 
 
 @pytest.fixture
-def layers_and_values(layers):
+def layers_and_values(layers: list[str]) -> dict[str, str]:
     return {layer: f"test_value_{i+1}" for i, layer in enumerate(layers)}
 
 
 @pytest.fixture
-def empty_node(layers):
+def empty_node(layers: list[str]) -> ConfigNode:
     return ConfigNode(layers, name="test_node")
 
 
 @pytest.fixture
-def full_node(layers_and_values):
+def full_node(layers_and_values: dict[str, str]) -> ConfigNode:
     n = ConfigNode(list(layers_and_values.keys()), name="test_node")
     for layer, value in layers_and_values.items():
         n.update(value, layer, source=None)
@@ -37,11 +38,11 @@ def full_node(layers_and_values):
 
 
 @pytest.fixture
-def empty_tree(layers):
+def empty_tree(layers: list[str]) -> LayeredConfigTree:
     return LayeredConfigTree(layers=layers)
 
 
-def test_node_creation(empty_node):
+def test_node_creation(empty_node: ConfigNode) -> None:
     assert not empty_node
     assert not empty_node.accessed
     assert not empty_node.metadata
@@ -49,7 +50,7 @@ def test_node_creation(empty_node):
     assert not str(empty_node)
 
 
-def test_full_node_update(full_node):
+def test_full_node_update(full_node: ConfigNode) -> None:
     assert full_node
     assert not full_node.accessed
     assert len(full_node.metadata) == len(full_node._layers)
@@ -57,7 +58,7 @@ def test_full_node_update(full_node):
     assert str(full_node)
 
 
-def test_node_update_no_args():
+def test_node_update_no_args() -> None:
     n = ConfigNode(["base"], name="test_node")
     n.update("test_value", layer=None, source=None)
     assert n._values["base"] == (None, "test_value")
@@ -68,7 +69,7 @@ def test_node_update_no_args():
     assert n._values["layer_2"] == (None, "test_value")
 
 
-def test_node_update_with_args():
+def test_node_update_with_args() -> None:
     n = ConfigNode(["base"], name="test_node")
     n.update("test_value", layer=None, source="test")
     assert n._values["base"] == ("test", "test_value")
@@ -99,27 +100,27 @@ def test_node_update_with_args():
     assert n._values["layer_2"] == ("test", "test_value")
 
 
-def test_node_frozen_update():
+def test_node_frozen_update() -> None:
     n = ConfigNode(["base"], name="test_node")
     n.freeze()
     with pytest.raises(ConfigurationError):
         n.update("test_val", layer=None, source=None)
 
 
-def test_node_bad_layer_update():
+def test_node_bad_layer_update() -> None:
     n = ConfigNode(["base"], name="test_node")
     with pytest.raises(ConfigurationKeyError):
         n.update("test_value", layer="layer_1", source=None)
 
 
-def test_node_duplicate_update():
+def test_node_duplicate_update() -> None:
     n = ConfigNode(["base"], name="test_node")
     n.update("test_value", layer=None, source=None)
     with pytest.raises(DuplicatedConfigurationError):
         n.update("test_value", layer=None, source=None)
 
 
-def test_node_get_value_with_source_empty(empty_node):
+def test_node_get_value_with_source_empty(empty_node: ConfigNode) -> None:
     with pytest.raises(ConfigurationKeyError):
         empty_node._get_value_with_source(layer=None)
 
@@ -130,7 +131,7 @@ def test_node_get_value_with_source_empty(empty_node):
     assert not empty_node.accessed
 
 
-def test_node_get_value_with_source(full_node):
+def test_node_get_value_with_source(full_node: ConfigNode) -> None:
     assert full_node._get_value_with_source(layer=None) == (
         None,
         f"test_value_{len(full_node._layers)}",
@@ -142,7 +143,7 @@ def test_node_get_value_with_source(full_node):
     assert not full_node.accessed
 
 
-def test_node_get_value_empty(empty_node):
+def test_node_get_value_empty(empty_node: ConfigNode) -> None:
     with pytest.raises(ConfigurationKeyError):
         empty_node.get_value()
 
@@ -153,7 +154,7 @@ def test_node_get_value_empty(empty_node):
     assert not empty_node.accessed
 
 
-def test_node_get_value(full_node):
+def test_node_get_value(full_node: ConfigNode) -> None:
     assert full_node.get_value() == f"test_value_{len(full_node._layers)}"
     assert full_node.accessed
     full_node._accessed = False
@@ -170,7 +171,7 @@ def test_node_get_value(full_node):
     assert not full_node.accessed
 
 
-def test_node_repr():
+def test_node_repr() -> None:
     n = ConfigNode(["base"], name="test_node")
     n.update("test_value", layer="base", source="test")
     s = """\
@@ -203,7 +204,7 @@ def test_node_repr():
     assert repr(n) == textwrap.dedent(s)
 
 
-def test_node_str():
+def test_node_str() -> None:
     n = ConfigNode(["base"], name="test_node")
     n.update("test_value", layer="base", source="test")
     s = "base: test_value"
@@ -226,7 +227,7 @@ def test_node_str():
     assert str(n) == s
 
 
-def test_tree_creation(empty_tree):
+def test_tree_creation(empty_tree: LayeredConfigTree) -> None:
     assert len(empty_tree) == 0
     assert not empty_tree.items()
     assert not empty_tree.values()
@@ -237,7 +238,7 @@ def test_tree_creation(empty_tree):
     assert empty_tree.to_dict() == {}
 
 
-def test_tree_coerce_dict():
+def test_tree_coerce_dict() -> None:
     d, s = {}, "test"
     assert LayeredConfigTree._coerce(d, s) == (d, s)
     d, s = {"key": "val"}, "test"
@@ -247,7 +248,7 @@ def test_tree_coerce_dict():
     assert LayeredConfigTree._coerce(d, s) == (d, s)
 
 
-def test_tree_coerce_str():
+def test_tree_coerce_str() -> None:
     d = """"""
     s = "test"
     assert LayeredConfigTree._coerce(d, s) == (None, s)
@@ -273,7 +274,10 @@ def test_tree_coerce_str():
     assert LayeredConfigTree._coerce(d, s) == (r, s)
 
 
-def test_tree_coerce_yaml(tmpdir):
+import py
+
+
+def test_tree_coerce_yaml(tmp_path: Path) -> None:
     d = """\
      key1:
          sub_key1:
@@ -287,14 +291,14 @@ def test_tree_coerce_yaml(tmpdir):
         "key2": "val",
     }
     s = "test"
-    p = tmpdir.join("model_spec.yaml")
+    p = tmp_path / "model_spec.yaml"
     with p.open("w") as f:
         f.write(d)
     assert LayeredConfigTree._coerce(str(p), s) == (r, s)
     assert LayeredConfigTree._coerce(str(p), None) == (r, str(p))
 
 
-def test_single_layer():
+def test_single_layer() -> None:
     d = LayeredConfigTree()
     d.update({"test_key": "test_value", "test_key2": "test_value2"})
 
@@ -308,7 +312,7 @@ def test_single_layer():
     assert d.test_key == "test_value"
 
 
-def test_dictionary_style_access():
+def test_dictionary_style_access() -> None:
     d = LayeredConfigTree()
     d.update({"test_key": "test_value", "test_key2": "test_value2"})
 
@@ -322,13 +326,13 @@ def test_dictionary_style_access():
     assert d["test_key"] == "test_value"
 
 
-def test_get_missing_key():
+def test_get_missing_key() -> None:
     d = LayeredConfigTree()
     with pytest.raises(ConfigurationKeyError):
         _ = d.missing_key
 
 
-def test_set_missing_key():
+def test_set_missing_key() -> None:
     d = LayeredConfigTree()
     with pytest.raises(ConfigurationKeyError):
         d.missing_key = "test_value"
@@ -336,7 +340,7 @@ def test_set_missing_key():
         d["missing_key"] = "test_value"
 
 
-def test_multiple_layer_get():
+def test_multiple_layer_get() -> None:
     d = LayeredConfigTree(layers=["first", "second", "third"])
     d._set_with_metadata("test_key", "test_with_source_value", "first", source=None)
     d._set_with_metadata("test_key", "test_value2", "second", source=None)
@@ -352,7 +356,7 @@ def test_multiple_layer_get():
     assert d.test_key3 == "test_value6"
 
 
-def test_outer_layer_set():
+def test_outer_layer_set() -> None:
     d = LayeredConfigTree(layers=["inner", "outer"])
     d._set_with_metadata("test_key", "test_value", "inner", source=None)
     d._set_with_metadata("test_key", "test_value3", layer=None, source=None)
@@ -372,7 +376,7 @@ def test_outer_layer_set():
     assert d["test_key"] == "test_value3"
 
 
-def test_update_dict():
+def test_update_dict() -> None:
     d = LayeredConfigTree(layers=["inner", "outer"])
     d.update({"test_key": "test_value", "test_key2": "test_value2"}, layer="inner")
     d.update({"test_key": "test_value3"}, layer="outer")
@@ -381,7 +385,7 @@ def test_update_dict():
     assert d.test_key2 == "test_value2"
 
 
-def test_update_dict_nested():
+def test_update_dict_nested() -> None:
     d = LayeredConfigTree(layers=["inner", "outer"])
     d.update(
         {"test_container": {"test_key": "test_value", "test_key2": "test_value2"}},
@@ -398,7 +402,7 @@ def test_update_dict_nested():
     assert d.test_container.test_key2 == "test_value4"
 
 
-def test_source_metadata():
+def test_source_metadata() -> None:
     d = LayeredConfigTree(layers=["inner", "outer"])
     d.update({"test_key": "test_value"}, layer="inner", source="initial_load")
     d.update({"test_key": "test_value2"}, layer="outer", source="update")
@@ -409,7 +413,7 @@ def test_source_metadata():
     ]
 
 
-def test_exception_on_source_for_missing_key():
+def test_exception_on_source_for_missing_key() -> None:
     d = LayeredConfigTree(layers=["inner", "outer"])
     d.update({"test_key": "test_value"}, layer="inner", source="initial_load")
 
@@ -417,7 +421,7 @@ def test_exception_on_source_for_missing_key():
         d.metadata("missing_key")
 
 
-def test_unused_keys():
+def test_unused_keys() -> None:
     d = LayeredConfigTree(
         {"test_key": {"test_key2": "test_value", "test_key3": "test_value2"}}
     )
@@ -433,20 +437,20 @@ def test_unused_keys():
     assert not d.unused_keys()
 
 
-def test_to_dict_dict():
+def test_to_dict_dict() -> None:
     test_dict = {"configuration": {"time": {"start": {"year": 2000}}}}
     config = LayeredConfigTree(test_dict)
     assert config.to_dict() == test_dict
 
 
-def test_to_dict_yaml(test_spec):
+def test_to_dict_yaml(test_spec: Path) -> None:
     config = LayeredConfigTree(str(test_spec))
     with test_spec.open() as f:
         yaml_config = yaml.full_load(f)
     assert yaml_config == config.to_dict()
 
 
-def test_equals():
+def test_equals() -> None:
     # TODO: Assert should succeed, instead of raising, once equality is
     # implemented for LayeredConfigTrees
     with pytest.raises(NotImplementedError):
@@ -456,7 +460,7 @@ def test_equals():
         assert config == config2
 
 
-def test_to_from_pickle():
+def test_to_from_pickle() -> None:
     test_dict = {"configuration": {"time": {"start": {"year": 2000}}}}
     second_layer = {"configuration": {"time": {"start": {"year": 2001}}}}
     config = LayeredConfigTree(test_dict, layers=["first_layer", "second_layer"])
@@ -473,7 +477,7 @@ def test_to_from_pickle():
     assert unpickled._layers == config._layers
 
 
-def test_freeze():
+def test_freeze() -> None:
     config = LayeredConfigTree(data={"configuration": {"time": {"start": {"year": 2000}}}})
     config.freeze()
 
@@ -481,7 +485,7 @@ def test_freeze():
         config.update(data={"configuration": {"time": {"end": {"year": 2001}}}})
 
 
-def test_retrieval_behavior():
+def test_retrieval_behavior() -> None:
     layer_inner = "inner"
     layer_middle = "middle"
     layer_outer = "outer"
@@ -502,7 +506,7 @@ def test_retrieval_behavior():
         assert cfg.get_from_layer(default_cfg_value, layer=layer_inner) == layer_inner
 
 
-def test_repr_display():
+def test_repr_display() -> None:
     expected_repr = """\
     Key1:
         override_2: value_ov_2
