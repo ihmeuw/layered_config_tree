@@ -399,7 +399,7 @@ class LayeredConfigTree:
 
     def metadata(self, name: str) -> List[Dict[str, Any]]:
         if name in self:
-            return self._children[name].metadata
+            return self._children[name].metadata  # type: ignore[return-value]
         name = f"{self._name}.{name}" if self._name else name
         raise ConfigurationKeyError(f"No configuration value with name {name}", name)
 
@@ -418,9 +418,17 @@ class LayeredConfigTree:
             with open(data) as f:
                 data = f.read()
             data = yaml.full_load(data)
+            if not isinstance(data, dict):
+                raise ValueError(
+                    f"Loaded yaml file {data} should be a dictionary but is type {type(data)}"
+                )
             return data, source
         elif isinstance(data, str):
             data = yaml.full_load(data)
+            if not isinstance(data, dict):
+                raise ValueError(
+                    f"Loaded yaml file {data} should be a dictionary but is type {type(data)}"
+                )
             return data, source
         elif isinstance(data, LayeredConfigTree):
             return data.to_dict(), source
