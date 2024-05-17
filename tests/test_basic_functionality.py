@@ -245,6 +245,7 @@ def test_tree_coerce_dict() -> None:
     assert LayeredConfigTree._coerce(d, s) == (d, s)
     d = {"key1": {"sub_key1": ["val", "val", "val"], "sub_key2": "val"}, "key2": "val"}
     s = "test"
+    breakpoint()
     assert LayeredConfigTree._coerce(d, s) == (d, s)
 
 
