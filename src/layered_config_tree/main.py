@@ -29,8 +29,9 @@ For example:
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional, Tuple, Union
+from typing import Any, Optional, Union
 
 import yaml
 
@@ -69,10 +70,10 @@ class ConfigNode:
 
     """
 
-    def __init__(self, layers: List[str], name: str):
+    def __init__(self, layers: list[str], name: str):
         self._name = name
         self._layers = layers
-        self._values: Dict[str, Tuple[Optional[str], Any]] = {}
+        self._values: dict[str, tuple[Optional[str], Any]] = {}
         self._frozen = False
         self._accessed = False
 
@@ -87,7 +88,7 @@ class ConfigNode:
         return self._accessed
 
     @property
-    def metadata(self) -> List[Dict[str, Any]]:
+    def metadata(self) -> list[dict[str, Any]]:
         """Returns all values and associated metadata for this node."""
         result = []
         for layer in self._layers:
@@ -178,7 +179,7 @@ class ConfigNode:
         else:
             self._values[layer] = (source, value)
 
-    def _get_value_with_source(self, layer: Optional[str]) -> Tuple[Optional[str], Any]:
+    def _get_value_with_source(self, layer: Optional[str]) -> tuple[Optional[str], Any]:
         """Returns a (source, value) tuple at the specified layer.
 
         If no layer is specified, the outermost (highest priority) layer
@@ -232,12 +233,12 @@ class LayeredConfigTree:
     """
 
     # Define type annotation of _children here since it's indirectly defined below
-    _children: Dict[str, Union["LayeredConfigTree", "ConfigNode"]]
+    _children: dict[str, Union["LayeredConfigTree", "ConfigNode"]]
 
     def __init__(
         self,
-        data: Optional[Union[Dict[str, Any], str, Path, "LayeredConfigTree"]] = None,
-        layers: Optional[List[str]] = None,
+        data: Optional[Union[dict[str, Any], str, Path, "LayeredConfigTree"]] = None,
+        layers: Optional[list[str]] = None,
         name: str = "",
     ):
         """
@@ -286,7 +287,7 @@ class LayeredConfigTree:
         for child in self.values():
             child.freeze()
 
-    def items(self) -> Iterable[Tuple[str, Union["LayeredConfigTree", ConfigNode]]]:
+    def items(self) -> Iterable[tuple[str, Union["LayeredConfigTree", ConfigNode]]]:
         """Return an iterable of all (child_name, child) pairs."""
         return self._children.items()
 
@@ -298,7 +299,7 @@ class LayeredConfigTree:
         """Return an Iterable of all children."""
         return self._children.values()
 
-    def unused_keys(self) -> List[str]:
+    def unused_keys(self) -> list[str]:
         """Lists all values in the LayeredConfigTree that haven't been accessed."""
         unused = []
         for name, child in self.items():
@@ -310,7 +311,7 @@ class LayeredConfigTree:
                     unused.append(f"{name}.{grandchild_name}")
         return unused
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Converts the LayeredConfigTree into a nested dictionary.
 
         All metadata is lost in this conversion.
@@ -350,7 +351,7 @@ class LayeredConfigTree:
 
     def update(
         self,
-        data: Optional[Union[Dict[str, Any], str, Path, "LayeredConfigTree"]],
+        data: Optional[Union[dict[str, Any], str, Path, "LayeredConfigTree"]],
         layer: Optional[str] = None,
         source: Optional[str] = None,
     ) -> None:
@@ -396,7 +397,7 @@ class LayeredConfigTree:
             for k, v in data.items():
                 self._set_with_metadata(k, v, layer, source)
 
-    def metadata(self, name: str) -> List[Dict[str, Any]]:
+    def metadata(self, name: str) -> list[dict[str, Any]]:
         if name in self:
             return self._children[name].metadata  # type: ignore[return-value]
         name = f"{self._name}.{name}" if self._name else name
@@ -404,9 +405,9 @@ class LayeredConfigTree:
 
     @staticmethod
     def _coerce(
-        data: Union[Dict[str, Any], str, Path, "LayeredConfigTree"],
+        data: Union[dict[str, Any], str, Path, "LayeredConfigTree"],
         source: Optional[str],
-    ) -> Tuple[Dict[str, Any], Optional[str]]:
+    ) -> tuple[dict[str, Any], Optional[str]]:
         """Coerces data into dictionary format."""
         if isinstance(data, dict):
             return data, source
@@ -526,7 +527,7 @@ class LayeredConfigTree:
     def __getstate__(self) -> dict[str, Any]:
         return self.__dict__
 
-    def __setstate__(self, state: Dict[str, Any]) -> None:
+    def __setstate__(self, state: dict[str, Any]) -> None:
         for k, v in state.items():
             self.__dict__[k] = v
 
