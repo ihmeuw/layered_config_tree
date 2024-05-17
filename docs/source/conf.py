@@ -17,10 +17,6 @@ import sys
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 from pathlib import Path
 
-from docutils.nodes import Text
-from sphinx.application import Sphinx
-from sphinx.ext.intersphinx import missing_reference
-
 import layered_config_tree
 
 base_dir = Path(layered_config_tree.__file__).parent
@@ -38,9 +34,9 @@ copyright = f'2024, {about["__author__"]}'
 author = about["__author__"]
 
 # The short X.Y version.
-version = layered_config_tree.__version__
+version = layered_config_tree.__version__  # type: ignore[attr-defined]
 # The full version, including alpha/beta/rc tags.
-release = layered_config_tree.__version__
+release = layered_config_tree.__version__  # type: ignore[attr-defined]
 
 
 # -- General configuration ------------------------------------------------
