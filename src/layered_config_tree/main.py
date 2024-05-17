@@ -72,7 +72,7 @@ class ConfigNode:
     def __init__(self, layers: List[str], name: str):
         self._name = name
         self._layers = layers
-        self._values: Dict[str, Tuple[str, Any]] = {}
+        self._values: Dict[str, Tuple[Optional[str], Any]] = {}
         self._frozen = False
         self._accessed = False
 
@@ -178,7 +178,7 @@ class ConfigNode:
         else:
             self._values[layer] = (source, value)
 
-    def _get_value_with_source(self, layer: Optional[str]) -> Tuple[str, Any]:
+    def _get_value_with_source(self, layer: Optional[str]) -> Tuple[Optional[str], Any]:
         """Returns a (source, value) tuple at the specified layer.
 
         If no layer is specified, the outermost (highest priority) layer
