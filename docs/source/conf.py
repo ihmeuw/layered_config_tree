@@ -20,8 +20,9 @@ from pathlib import Path
 import layered_config_tree
 
 base_dir = Path(layered_config_tree.__file__).parent
+from typing import Optional
 
-about = {}
+about: dict[str, str] = {}
 with (base_dir / "__about__.py").open() as f:
     exec(f.read(), about)
 
@@ -87,7 +88,7 @@ language = "en"
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
-exclude_patterns = []
+exclude_patterns: list[Optional[str]] = []
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = "sphinx"
@@ -136,7 +137,7 @@ htmlhelp_basename = f'{about["__title__"]}doc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
-latex_elements = {
+latex_elements: dict[str, str] = {
     # The paper size ('letterpaper' or 'a4paper').
     #
     # 'papersize': 'letterpaper',
@@ -220,7 +221,7 @@ autodoc_typehints = "description"
 
 nitpicky = True
 
-nitpick_ignore = []
+nitpick_ignore: list[tuple[str, str]] = []
 # for line in open("../nitpick-exceptions"):
 #     if line.strip() == "" or line.startswith("#"):
 #         continue
