@@ -277,9 +277,6 @@ def test_tree_coerce_str() -> None:
     assert LayeredConfigTree._coerce(d, s) == (r, s)
 
 
-import py
-
-
 def test_tree_coerce_yaml(tmp_path: Path) -> None:
     d = """\
      key1:
