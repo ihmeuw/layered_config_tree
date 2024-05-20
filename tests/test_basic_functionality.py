@@ -1,7 +1,6 @@
 import pickle
 import textwrap
 from pathlib import Path
-from typing import Any
 
 import pytest
 import yaml
@@ -13,6 +12,7 @@ from layered_config_tree import (
     DuplicatedConfigurationError,
     LayeredConfigTree,
 )
+from layered_config_tree.types import NestedDict
 
 
 @pytest.fixture(params=list(range(1, 5)))
@@ -243,7 +243,7 @@ def test_tree_creation(empty_tree: LayeredConfigTree) -> None:
 
 
 def test_tree_coerce_dict() -> None:
-    d: dict[str, Any]
+    d: NestedDict
     d, s = {}, "test"
     assert LayeredConfigTree._coerce(d, s) == (d, s)
     d, s = {"key": "val"}, "test"

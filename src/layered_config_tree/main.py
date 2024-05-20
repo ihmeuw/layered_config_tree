@@ -31,7 +31,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Optional, Union, Any
 
 import yaml
 
@@ -40,6 +40,7 @@ from layered_config_tree import (
     ConfigurationKeyError,
     DuplicatedConfigurationError,
 )
+from layered_config_tree.types import NestedDict, NestedDictValue
 
 
 class ConfigNode:
@@ -88,7 +89,7 @@ class ConfigNode:
         return self._accessed
 
     @property
-    def metadata(self) -> list[dict[str, Any]]:
+    def metadata(self) -> list[dict[str, Union[str, NestedDictValue]]]:
         """Returns all values and associated metadata for this node."""
         result = []
         for layer in self._layers:
@@ -237,7 +238,7 @@ class LayeredConfigTree:
 
     def __init__(
         self,
-        data: Optional[Union[dict[str, Any], str, Path, "LayeredConfigTree"]] = None,
+        data: Optional[Union[NestedDict, str, Path, "LayeredConfigTree"]] = None,
         layers: Optional[list[str]] = None,
         name: str = "",
     ):
@@ -311,7 +312,7 @@ class LayeredConfigTree:
                     unused.append(f"{name}.{grandchild_name}")
         return unused
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> NestedDict:
         """Converts the LayeredConfigTree into a nested dictionary.
 
         All metadata is lost in this conversion.
@@ -351,7 +352,7 @@ class LayeredConfigTree:
 
     def update(
         self,
-        data: Optional[Union[dict[str, Any], str, Path, "LayeredConfigTree"]],
+        data: Optional[Union[NestedDict, str, Path, "LayeredConfigTree"]],
         layer: Optional[str] = None,
         source: Optional[str] = None,
     ) -> None:
@@ -397,7 +398,7 @@ class LayeredConfigTree:
             for k, v in data.items():
                 self._set_with_metadata(k, v, layer, source)
 
-    def metadata(self, name: str) -> list[dict[str, Any]]:
+    def metadata(self, name: str) -> list[NestedDict]:
         if name in self:
             return self._children[name].metadata  # type: ignore[return-value]
         name = f"{self._name}.{name}" if self._name else name
@@ -405,9 +406,9 @@ class LayeredConfigTree:
 
     @staticmethod
     def _coerce(
-        data: Union[dict[str, Any], str, Path, "LayeredConfigTree"],
+        data: Union[NestedDict, str, Path, "LayeredConfigTree"],
         source: Optional[str],
-    ) -> tuple[dict[str, Any], Optional[str]]:
+    ) -> tuple[NestedDict, Optional[str]]:
         """Coerces data into dictionary format."""
         if isinstance(data, dict):
             return data, source
@@ -524,10 +525,10 @@ class LayeredConfigTree:
     # * Calling __getattr__ before we have set up the state doesn't work,
     #   because it leads to an infinite loop looking for the module's
     #   actual attributes (not config keys)
-    def __getstate__(self) -> dict[str, Any]:
+    def __getstate__(self) -> NestedDict:
         return self.__dict__
 
-    def __setstate__(self, state: dict[str, Any]) -> None:
+    def __setstate__(self, state: NestedDict) -> None:
         for k, v in state.items():
             self.__dict__[k] = v
 
