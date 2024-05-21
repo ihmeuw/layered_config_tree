@@ -40,12 +40,7 @@ from layered_config_tree import (
     ConfigurationKeyError,
     DuplicatedConfigurationError,
 )
-from layered_config_tree.types import (
-    ConfigNodeValue,
-    InputData,
-    NestedDict,
-    NestedDictValue,
-)
+from layered_config_tree.types import InputData, NestedDict, NestedDictValue, NodeValue
 
 
 class ConfigNode:
@@ -79,7 +74,7 @@ class ConfigNode:
     def __init__(self, layers: list[str], name: str):
         self._name = name
         self._layers = layers
-        self._values: dict[str, tuple[Optional[str], ConfigNodeValue]] = {}
+        self._values: dict[str, tuple[Optional[str], NodeValue]] = {}
         self._frozen = False
         self._accessed = False
 
@@ -94,7 +89,7 @@ class ConfigNode:
         return self._accessed
 
     @property
-    def metadata(self) -> list[dict[str, Union[Optional[str], ConfigNodeValue]]]:
+    def metadata(self) -> list[dict[str, Union[Optional[str], NodeValue]]]:
         """Returns all values and associated metadata for this node."""
         result = []
         for layer in self._layers:
@@ -117,7 +112,7 @@ class ConfigNode:
         """
         self._frozen = True
 
-    def get_value(self, layer: Optional[str] = None) -> ConfigNodeValue:
+    def get_value(self, layer: Optional[str] = None) -> NodeValue:
         """Returns the value at the specified layer.
 
         If no layer is specified, the outermost (highest priority) layer
@@ -138,9 +133,7 @@ class ConfigNode:
         self._accessed = True
         return value
 
-    def update(
-        self, value: ConfigNodeValue, layer: Optional[str], source: Optional[str]
-    ) -> None:
+    def update(self, value: NodeValue, layer: Optional[str], source: Optional[str]) -> None:
         """Set a value for a layer with optional metadata about source.
 
         Parameters
@@ -187,9 +180,7 @@ class ConfigNode:
         else:
             self._values[layer] = (source, value)
 
-    def _get_value_with_source(
-        self, layer: Optional[str]
-    ) -> tuple[Optional[str], ConfigNodeValue]:
+    def _get_value_with_source(self, layer: Optional[str]) -> tuple[Optional[str], NodeValue]:
         """Returns a (source, value) tuple at the specified layer.
 
         If no layer is specified, the outermost (highest priority) layer
@@ -340,7 +331,7 @@ class LayeredConfigTree:
 
     def get_from_layer(
         self, name: str, layer: Optional[str] = None
-    ) -> Union[ConfigNodeValue, "LayeredConfigTree"]:
+    ) -> Union[NodeValue, "LayeredConfigTree"]:
         """Get a configuration value from the provided layer.
 
         If no layer is specified, the outermost (highest priority) layer
@@ -550,7 +541,7 @@ class LayeredConfigTree:
         for k, v in state.items():
             self.__dict__[k] = v
 
-    def __getitem__(self, name: str) -> Union[ConfigNodeValue, "LayeredConfigTree"]:
+    def __getitem__(self, name: str) -> Union[NodeValue, "LayeredConfigTree"]:
         """Get a value from the outermost layer in which it appears."""
         return self.get_from_layer(name)
 
