@@ -42,9 +42,6 @@ if __name__ == "__main__":
 
     install_requirements = [
         "pyyaml>=5.1",
-        # typing extensions
-        "types-PyYAML",
-        "types-setuptools",
     ]
     setup_requirements = ["setuptools_scm"]
     test_requirements = [
@@ -58,6 +55,14 @@ if __name__ == "__main__":
         "IPython",
         "matplotlib",
         "sphinxcontrib-video",
+    ]
+    dev_requirements = [
+        "black==22.3.0",
+        "isort",
+        "mypy",
+        # typing extensions
+        "types-PyYAML",
+        "types-setuptools",
     ]
 
     setup(
@@ -89,7 +94,7 @@ if __name__ == "__main__":
         extras_require={
             "docs": doc_requirements,
             "test": test_requirements,
-            "dev": doc_requirements + test_requirements,
+            "dev": doc_requirements + test_requirements + dev_requirements,
         },
         zip_safe=False,
         use_scm_version={
