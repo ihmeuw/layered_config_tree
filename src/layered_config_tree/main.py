@@ -522,6 +522,9 @@ class LayeredConfigTree:
             )
         self._set_with_metadata(name, value, layer=None, source=None)
 
+    # FIXME: We expect the return to be a ConfigNode or LayeredConfigTree but
+    # the type checker doesn't know what you're getting back in chained
+    # attribute calls. We return Any as a workaround.
     def __getattr__(self, name: str) -> Any:
         """Get a value from the outermost layer in which it appears."""
         return self.get_from_layer(name)
