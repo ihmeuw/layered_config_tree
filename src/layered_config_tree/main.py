@@ -74,8 +74,6 @@ class ConfigNode:
     def __init__(self, layers: list[str], name: str):
         self._name = name
         self._layers = layers
-        # self._values is a dictionary with keys as layer names and dict values
-        # as tuple(source, data)
         self._values: dict[str, tuple[Optional[str], NodeValue]] = {}
         self._frozen = False
         self._accessed = False
