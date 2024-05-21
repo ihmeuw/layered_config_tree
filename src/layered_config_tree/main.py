@@ -40,7 +40,12 @@ from layered_config_tree import (
     ConfigurationKeyError,
     DuplicatedConfigurationError,
 )
-from layered_config_tree.types import ConfigNodeValue, NestedDict, NestedDictValue
+from layered_config_tree.types import (
+    ConfigNodeValue,
+    InputData,
+    NestedDict,
+    NestedDictValue,
+)
 
 
 class ConfigNode:
@@ -245,7 +250,7 @@ class LayeredConfigTree:
 
     def __init__(
         self,
-        data: Optional[Union[NestedDict, str, Path, "LayeredConfigTree"]] = None,
+        data: Optional[InputData] = None,
         layers: Optional[list[str]] = None,
         name: str = "",
     ):
@@ -361,7 +366,7 @@ class LayeredConfigTree:
 
     def update(
         self,
-        data: Optional[Union[NestedDict, str, Path, "LayeredConfigTree"]],
+        data: Optional[InputData],
         layer: Optional[str] = None,
         source: Optional[str] = None,
     ) -> None:
@@ -415,7 +420,7 @@ class LayeredConfigTree:
 
     @staticmethod
     def _coerce(
-        data: Union[NestedDict, str, Path, "LayeredConfigTree"],
+        data: InputData,
         source: Optional[str],
     ) -> tuple[NestedDict, Optional[str]]:
         """Coerces data into dictionary format."""

@@ -1,6 +1,12 @@
-from typing import Mapping, Union
+from typing import Mapping, Union, TYPE_CHECKING
+from pathlib import Path
+
+if TYPE_CHECKING:
+    from layered_config_tree import LayeredConfigTree
+
 
 # NOTE: py 3.9 does not support typing.TypeAlias
+
 # Define a nested dictionary of unknown depth for type hinting
 NestedDict = Mapping[str, "NestedDictValue"]
 # Define the leaf (ConfigNode) values (which cannot be another dictionary)
@@ -10,3 +16,6 @@ ConfigNodeValue = Union[str, int, float, list[Union[str, int, float]]]
 #   (e.g. mypy) may not be able to determine the correct type of NestedDictValue;
 #   use # type: ignore as required
 NestedDictValue = Union[ConfigNodeValue, NestedDict]
+
+# Data input types
+InputData = Union[NestedDict, str, Path, "LayeredConfigTree"]
