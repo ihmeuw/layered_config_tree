@@ -244,12 +244,12 @@ def test_tree_creation(empty_tree: LayeredConfigTree) -> None:
 
 def test_tree_coerce_dict() -> None:
     data: NestedDict
-    data, src = {}, "test"
+    data = {}
+    src = "test"
     assert LayeredConfigTree._coerce(data, src) == (data, src)
-    data, src = {"key": "val"}, "test"
+    data = {"key": "val"}
     assert LayeredConfigTree._coerce(data, src) == (data, src)
     data = {"key1": {"sub_key1": ["val", "val", "val"], "sub_key2": "val"}, "key2": "val"}
-    src = "test"
     assert LayeredConfigTree._coerce(data, src) == (data, src)
 
 
