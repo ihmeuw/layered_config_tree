@@ -34,7 +34,7 @@ def empty_node(layers: list[str]) -> ConfigNode:
 def full_node(layers_and_values: dict[str, str]) -> ConfigNode:
     n = ConfigNode(list(layers_and_values.keys()), name="test_node")
     for layer, value in layers_and_values.items():
-        n.update(value, layer, source="test_source")
+        n.update(value, layer, source=None)
     return n
 
 
@@ -134,13 +134,13 @@ def test_node_get_value_with_source_empty(empty_node: ConfigNode) -> None:
 
 def test_node_get_value_with_source(full_node: ConfigNode) -> None:
     assert full_node._get_value_with_source(layer=None) == (
-        "test_source",
+        None,
         f"test_value_{len(full_node._layers)}",
     )
 
     for i, layer in enumerate(full_node._layers):
         assert full_node._get_value_with_source(layer=layer) == (
-            "test_source",
+            None,
             f"test_value_{i+1}",
         )
 
