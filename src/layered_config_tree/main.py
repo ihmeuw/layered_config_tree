@@ -242,7 +242,7 @@ class LayeredConfigTree:
     def __init__(
         self,
         data: Optional[InputData] = None,
-        layers: Optional[list[str]] = None,
+        layers: list[str] = [],
         name: str = "",
     ):
         """
