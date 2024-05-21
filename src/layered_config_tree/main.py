@@ -237,8 +237,11 @@ class LayeredConfigTree:
 
     """
 
-    # Define type annotation of _children here since it's indirectly defined below
+    # Define type annotations here since they're indirectly defined below
+    _layers: list[str]
     _children: dict[str, Union["LayeredConfigTree", "ConfigNode"]]
+    _frozen: bool
+    _name: str
 
     def __init__(
         self,
@@ -542,7 +545,7 @@ class LayeredConfigTree:
         for k, v in state.items():
             self.__dict__[k] = v
 
-    def __getitem__(self, name: str) -> Any:
+    def __getitem__(self, name: str) -> Union[ConfigNodeValue, "LayeredConfigTree"]:
         """Get a value from the outermost layer in which it appears."""
         return self.get_from_layer(name)
 
