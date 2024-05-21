@@ -254,6 +254,9 @@ def test_tree_coerce_dict() -> None:
 
 
 def test_tree_coerce_str() -> None:
+    d = """"""
+    s = "test"
+    assert LayeredConfigTree._coerce(d, s) == (None, s)
     src = "test"
     data = """\
     key: val"""
