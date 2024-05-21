@@ -8,6 +8,8 @@ from layered_config_tree.__about__ import (
     __uri__,
 )
 
+# FIXME: Is there a better way to get around mypy error
+# "error: Module "layered_config_tree" does not explicitly export attribute "ConfigurationKeyError"  [attr-defined]"
 __all__ = [
     "ConfigNode",
     "ConfigurationError",
