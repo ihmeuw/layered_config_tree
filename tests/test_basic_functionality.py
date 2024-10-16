@@ -478,7 +478,7 @@ def test_tree_getter(getter_dict: NestedDict) -> None:
     lct = LayeredConfigTree(getter_dict)
 
     assert lct.get_tree("outer_layer_2").to_dict() == getter_dict["outer_layer_2"]
-    with pytest.raises(ValueError, match='not a LayeredConfigTree'):
+    with pytest.raises(ValueError, match="not a LayeredConfigTree"):
         assert lct.get_tree("outer_layer_1") == "test_value"
 
 

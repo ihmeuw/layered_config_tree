@@ -369,7 +369,9 @@ class LayeredConfigTree:
         if isinstance(data, LayeredConfigTree):
             return data
         else:
-            raise ValueError(f"The data you tried accessing using {key} with get_tree was not a LayeredConfigTree.")
+            raise ValueError(
+                f"The data you tried accessing using {key} with get_tree was not a LayeredConfigTree."
+            )
 
     def get_from_layer(
         self, name: str, layer: Optional[str] = None
