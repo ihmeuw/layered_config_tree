@@ -43,11 +43,6 @@ def empty_tree(layers: list[str]) -> LayeredConfigTree:
     return LayeredConfigTree(layers=layers)
 
 
-@pytest.fixture
-def getter_dict() -> dict:
-    return {"outer_layer": {"middle_layer_1": 0.0, "middle_layer_2": {"inner_layer": 1.0}}}
-
-
 def test_node_creation(empty_node: ConfigNode) -> None:
     assert not empty_node
     assert not empty_node.accessed
@@ -463,26 +458,16 @@ def test_to_dict_yaml(test_spec: Path) -> None:
     assert yaml_config == lct.to_dict()
 
 
-def test_getter_success(getter_dict) -> None:
+def test_getter() -> None:
+    getter_dict: NestedDict = {
+        "outer_layer_1": "test_value",
+        "outer_layer_2": {"inner_layer": "test_value2"},
+    }
     lct = LayeredConfigTree(getter_dict)
 
-    assert lct.get("outer_layer").to_dict() == getter_dict["outer_layer"]
-    assert lct.get("outer_layer").get("middle_layer_1") == 0.0
-    assert (
-        lct.get("outer_layer").get("middle_layer_2").to_dict()
-        == getter_dict["outer_layer"]["middle_layer_2"]
-    )
-    assert lct.get("outer_layer").get("middle_layer_2").get("inner_layer") == 1.0
-
-
-def test_getter_failure(getter_dict) -> None:
-    lct = LayeredConfigTree(getter_dict)
-
-    match_msg = "not found in the outermost layer"
-    with pytest.raises(KeyError, match=match_msg):
-        lct.get("some_key")
-    with pytest.raises(KeyError, match=match_msg):
-        lct.get("outer_layer").get("some_key")
+    assert lct.get("outer_layer_1") == "test_value"
+    assert lct.get("outer_layer_2").to_dict() == getter_dict["outer_layer_2"]  # type: ignore [union-attr]
+    assert lct.get("outer_layer_2").get("inner_layer") == "test_value2"  # type: ignore [union-attr]
 
 
 def test_equals() -> None:

@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 # Define a nested dictionary of unknown depth for type hinting
 NestedDict = Mapping[str, "NestedDictValue"]
 # Define the leaf (ConfigNode) values (which cannot be another dictionary)
-NodeValue = Union[str, int, float, list[Union[str, int, float]]]
+NodeValue = Union[str, int, float, list[Union[str, int, float]], None]
 # Define a NestedDictionary value which can be either a ConfigNodeValue or another NestedDict
 # NOTE: Due to the forward reference to NestedDictValue above, static type checkers
 #   (e.g. mypy) may not be able to determine the correct type of NestedDictValue;
