@@ -353,6 +353,8 @@ class LayeredConfigTree:
         ----------
         key
             The str we look up in the outermost layer of the config tree.
+        default_value
+            The value we return if key is not found
         """
         default = LayeredConfigTree() if default_value is None else default_value
         return self[key] if key in self._children else default

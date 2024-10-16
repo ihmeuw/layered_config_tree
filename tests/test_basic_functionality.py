@@ -468,6 +468,10 @@ def test_getter() -> None:
     assert lct.get("outer_layer_1") == "test_value"
     assert lct.get("outer_layer_2").to_dict() == getter_dict["outer_layer_2"]  # type: ignore [union-attr]
     assert lct.get("outer_layer_2").get("inner_layer") == "test_value2"  # type: ignore [union-attr]
+    assert lct.get("fake_key").to_dict() == {}  # type: ignore [union-attr]
+    assert lct.get("fake_key").get("another_fake_key").to_dict() == {}  # type: ignore [union-attr]
+    assert lct.get("fake_key", 0) == 0
+    assert lct.get("fake_key", "some_default") == "some_default"
 
 
 def test_equals() -> None:
