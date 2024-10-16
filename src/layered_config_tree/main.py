@@ -357,13 +357,6 @@ class LayeredConfigTree:
         default = LayeredConfigTree() if default_value is None else default_value
         return self[key] if key in self._children else default
 
-    # def get_tree(self, key: str) -> LayeredConfigTree:
-    #     data = self.get(key)
-    #     if isinstance(data, LayeredConfigTree):
-    #         return data
-    #     else:
-    #         raise ValueError(f"{key} returned a node rather than a tree.")
-
     def get_from_layer(
         self, name: str, layer: Optional[str] = None
     ) -> Union[NodeValue, "LayeredConfigTree"]:
