@@ -43,6 +43,14 @@ def empty_tree(layers: list[str]) -> LayeredConfigTree:
     return LayeredConfigTree(layers=layers)
 
 
+@pytest.fixture
+def getter_dict() -> NestedDict:
+    return {
+        "outer_layer_1": "test_value",
+        "outer_layer_2": {"inner_layer": "test_value2"},
+    }
+
+
 def test_node_creation(empty_node: ConfigNode) -> None:
     assert not empty_node
     assert not empty_node.accessed
@@ -458,16 +466,20 @@ def test_to_dict_yaml(test_spec: Path) -> None:
     assert yaml_config == lct.to_dict()
 
 
-def test_getter() -> None:
-    getter_dict: NestedDict = {
-        "outer_layer_1": "test_value",
-        "outer_layer_2": {"inner_layer": "test_value2"},
-    }
+def test_getter(getter_dict: NestedDict) -> None:
     lct = LayeredConfigTree(getter_dict)
 
     assert lct.get("outer_layer_1") == "test_value"
     assert lct.get("outer_layer_2").to_dict() == getter_dict["outer_layer_2"]  # type: ignore [union-attr]
     assert lct.get("outer_layer_2").get("inner_layer") == "test_value2"  # type: ignore [union-attr]
+
+
+def test_tree_getter(getter_dict: NestedDict) -> None:
+    lct = LayeredConfigTree(getter_dict)
+
+    assert lct.get_tree("outer_layer_2").to_dict() == getter_dict["outer_layer_2"]
+    with pytest.raises(ValueError, match='not a LayeredConfigTree'):
+        assert lct.get_tree("outer_layer_1") == "test_value"
 
 
 def test_equals() -> None:
