@@ -346,6 +346,23 @@ class LayeredConfigTree:
                 result[name] = child.to_dict()  # type: ignore[assignment]
         return result
 
+    def get(self, key: str) -> InputData | LayeredConfigTree:
+        """Return the LayeredConfigTree or value at the key in the outermost layer of the config tree.
+
+        Parameters
+        ----------
+        key
+            The str we look up in the outermost layer of the config tree.
+        """
+        if key in self._children:
+            data = self._children[key]
+            if isinstance(data, ConfigNode):
+                return data.get_value(layer=None)
+            else:
+                return data
+        else:
+            raise KeyError(f"{key} was not found in the outermost layer of your config tree.")
+
     def get_from_layer(
         self, name: str, layer: Optional[str] = None
     ) -> Union[NodeValue, "LayeredConfigTree"]:
