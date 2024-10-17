@@ -366,11 +366,11 @@ class LayeredConfigTree:
         key
             The str we look up in the outermost layer of the config tree.
         """
-        data = self.get(key)
+        data = self[key]
         if isinstance(data, LayeredConfigTree):
             return data
         else:
-            raise ValueError(
+            raise ConfigurationError(
                 f"The data you accessed using {key} with get_tree was of type {type(data)}, but get_tree must return a LayeredConfigTree."
             )
 

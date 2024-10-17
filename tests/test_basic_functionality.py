@@ -509,9 +509,9 @@ def test_tree_getter(getter_dict: NestedDict) -> None:
     lct = LayeredConfigTree(getter_dict)
 
     assert lct.get_tree("outer_layer_2").to_dict() == getter_dict["outer_layer_2"]
-    with pytest.raises(ValueError, match="must return a LayeredConfigTree"):
+    with pytest.raises(ConfigurationError, match="must return a LayeredConfigTree"):
         lct.get_tree("outer_layer_1")
-    with pytest.raises(ValueError, match="must return a LayeredConfigTree"):
+    with pytest.raises(ConfigurationError, match="No value at name"):
         lct.get_tree("fake_key")
 
 
