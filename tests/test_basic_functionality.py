@@ -470,8 +470,20 @@ def test_getter(getter_dict: NestedDict) -> None:
     lct = LayeredConfigTree(getter_dict)
 
     assert lct.get("outer_layer_1") == "test_value"
-    assert lct.get("outer_layer_2").to_dict() == getter_dict["outer_layer_2"]  # type: ignore [union-attr]
-    assert lct.get("outer_layer_2").get("inner_layer") == "test_value2"  # type: ignore [union-attr]
+
+    outer_layer_2 = lct.get("outer_layer_2")
+    assert isinstance(outer_layer_2, LayeredConfigTree)
+    assert outer_layer_2.to_dict() == getter_dict["outer_layer_2"]
+    assert outer_layer_2.get("inner_layer") == "test_value2"
+
+    assert lct.get("fake_key") is None
+    assert lct.get("fake_key", 0) == 0
+    assert lct.get("fake_key", "some_default") == "some_default"
+
+    default_value = lct.get("fake_key", {})
+    # checking default_value equals {} is not enough for mypy to know it's a dict
+    assert default_value == {} and isinstance(default_value, dict)
+    assert default_value.get("another_fake_key") is None
 
 
 def test_tree_getter(getter_dict: NestedDict) -> None:
