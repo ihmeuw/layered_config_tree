@@ -470,6 +470,7 @@ def test_to_dict_yaml(test_spec: Path) -> None:
     "key, default_value, expected_value",
     [
         ("outer_layer_1", None, "test_value"),
+        ("outer_layer_1", "some_default", "test_value"),
         ("fake_key", 0, 0),
         ("fake_key", "some_default", "some_default"),
     ],
