@@ -346,7 +346,7 @@ class LayeredConfigTree:
                 result[name] = child.to_dict()  # type: ignore[assignment]
         return result
 
-    def get(self, key: str, default_value: NodeValue = None) -> LayeredConfigTree | NodeValue:
+    def get(self, key: str, default_value: Any = None) -> Any:
         """Return the LayeredConfigTree or value at the key in the outermost layer of the config tree.
 
         Parameters
