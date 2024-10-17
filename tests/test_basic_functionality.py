@@ -1,6 +1,7 @@
 import pickle
 import textwrap
 from pathlib import Path
+from typing import Any
 
 import pytest
 import yaml
@@ -12,7 +13,6 @@ from layered_config_tree import (
     DuplicatedConfigurationError,
     LayeredConfigTree,
 )
-from typing import Any
 
 
 @pytest.fixture(params=list(range(1, 5)))
