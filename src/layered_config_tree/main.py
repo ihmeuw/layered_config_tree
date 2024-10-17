@@ -40,7 +40,7 @@ from layered_config_tree import (
     ConfigurationKeyError,
     DuplicatedConfigurationError,
 )
-from layered_config_tree.types import InputData, NestedDict
+from layered_config_tree.types import InputData
 
 
 class ConfigNode:
@@ -332,7 +332,7 @@ class LayeredConfigTree:
                     unused.append(f"{name}.{grandchild_name}")
         return unused
 
-    def to_dict(self) -> NestedDict:
+    def to_dict(self) -> dict[str, Any]:
         """Converts the LayeredConfigTree into a nested dictionary.
 
         All metadata is lost in this conversion.
@@ -446,7 +446,7 @@ class LayeredConfigTree:
             for k, v in data.items():
                 self._set_with_metadata(k, v, layer, source)
 
-    def metadata(self, name: str) -> list[NestedDict]:
+    def metadata(self, name: str) -> list[dict[str, Any]]:
         if name in self:
             return self._children[name].metadata  # type: ignore[return-value]
         name = f"{self._name}.{name}" if self._name else name
@@ -456,7 +456,7 @@ class LayeredConfigTree:
     def _coerce(
         data: InputData,
         source: Optional[str],
-    ) -> tuple[NestedDict, Optional[str]]:
+    ) -> tuple[dict[str, Any], Optional[str]]:
         """Coerces data into dictionary format."""
         if isinstance(data, dict):
             return data, source
@@ -580,10 +580,10 @@ class LayeredConfigTree:
     # * Calling __getattr__ before we have set up the state doesn't work,
     #   because it leads to an infinite loop looking for the module's
     #   actual attributes (not config keys)
-    def __getstate__(self) -> NestedDict:
+    def __getstate__(self) -> dict[str, Any]:
         return self.__dict__
 
-    def __setstate__(self, state: NestedDict) -> None:
+    def __setstate__(self, state: dict[str, Any]) -> None:
         for k, v in state.items():
             self.__dict__[k] = v
 
