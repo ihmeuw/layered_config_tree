@@ -352,9 +352,9 @@ class LayeredConfigTree:
         Parameters
         ----------
         key
-            The str we look up in the outermost layer of the config tree.
+            The string to look for in the outermost layer of the config tree.
         default_value
-            The value we return if key is not found
+            The value to return if key is not found
         """
         return self[key] if key in self._children else default_value
 
