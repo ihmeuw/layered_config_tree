@@ -356,8 +356,7 @@ class LayeredConfigTree:
         default_value
             The value we return if key is not found
         """
-        default = LayeredConfigTree() if default_value is None else default_value
-        return self[key] if key in self._children else default
+        return self[key] if key in self._children else default_value
 
     def get_from_layer(
         self, name: str, layer: Optional[str] = None
