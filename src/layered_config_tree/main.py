@@ -232,10 +232,10 @@ class ConfigIterator:
     This iterator is used to iterate over the keys of a LayeredConfigTree object.
     """
 
-    def __init__(self, config_tree: "LayeredConfigTree"):
+    def __init__(self, config_tree: LayeredConfigTree):
         self._iterator = iter(config_tree._children)
 
-    def __iter__(self) -> "ConfigIterator":
+    def __iter__(self) -> ConfigIterator:
         return self
 
     def __next__(self) -> str:
@@ -252,7 +252,7 @@ class LayeredConfigTree:
 
     # Define type annotations here since they're indirectly defined below
     _layers: list[str]
-    _children: dict[str, Union["LayeredConfigTree", "ConfigNode"]]
+    _children: dict[str, Union[LayeredConfigTree, ConfigNode]]
     _frozen: bool
     _name: str
 
@@ -308,7 +308,7 @@ class LayeredConfigTree:
         for child in self.values():
             child.freeze()
 
-    def items(self) -> Iterable[tuple[str, Union["LayeredConfigTree", ConfigNode]]]:
+    def items(self) -> Iterable[tuple[str, Union[LayeredConfigTree, ConfigNode]]]:
         """Return an iterable of all (child_name, child) pairs."""
         return self._children.items()
 
