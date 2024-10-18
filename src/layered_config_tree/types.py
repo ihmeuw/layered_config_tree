@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Mapping, Union
+from typing import TYPE_CHECKING, Any, Union
 
 if TYPE_CHECKING:
     from layered_config_tree import LayeredConfigTree
