@@ -1,6 +1,7 @@
 import pickle
 import textwrap
 from pathlib import Path
+from typing import Any
 
 import pytest
 import yaml
@@ -12,7 +13,6 @@ from layered_config_tree import (
     DuplicatedConfigurationError,
     LayeredConfigTree,
 )
-from layered_config_tree.types import NestedDict
 
 
 @pytest.fixture(params=list(range(1, 5)))
@@ -44,7 +44,7 @@ def empty_tree(layers: list[str]) -> LayeredConfigTree:
 
 
 @pytest.fixture
-def getter_dict() -> NestedDict:
+def getter_dict() -> dict[str, Any]:
     return {
         "outer_layer_1": "test_value",
         "outer_layer_2": {"inner_layer": "test_value2"},
@@ -251,7 +251,7 @@ def test_tree_creation(empty_tree: LayeredConfigTree) -> None:
 
 
 def test_tree_coerce_dict() -> None:
-    data: NestedDict
+    data: dict[str, Any]
     data = {}
     src = "test"
     assert LayeredConfigTree._coerce(data, src) == (data, src)
@@ -476,7 +476,7 @@ def test_to_dict_yaml(test_spec: Path) -> None:
     ],
 )
 def test_getter_single_values(
-    key: str, default_value: str, expected_value: str, getter_dict: NestedDict
+    key: str, default_value: str, expected_value: str, getter_dict: dict[str, Any]
 ) -> None:
     lct = LayeredConfigTree(getter_dict)
 
@@ -486,7 +486,7 @@ def test_getter_single_values(
         assert lct.get(key, default_value) == expected_value
 
 
-def test_getter_chained(getter_dict: NestedDict) -> None:
+def test_getter_chained(getter_dict: dict[str, Any]) -> None:
     lct = LayeredConfigTree(getter_dict)
 
     outer_layer_2 = lct.get("outer_layer_2")
@@ -495,7 +495,7 @@ def test_getter_chained(getter_dict: NestedDict) -> None:
     assert outer_layer_2.get("inner_layer") == "test_value2"
 
 
-def test_getter_default_values(getter_dict: NestedDict) -> None:
+def test_getter_default_values(getter_dict: dict[str, Any]) -> None:
     lct = LayeredConfigTree(getter_dict)
 
     assert lct.get("fake_key") is None
@@ -504,6 +504,16 @@ def test_getter_default_values(getter_dict: NestedDict) -> None:
     # checking default_value equals {} is not enough for mypy to know it's a dict
     assert default_value == {} and isinstance(default_value, dict)
     assert default_value.get("another_fake_key") is None
+
+
+def test_tree_getter(getter_dict: dict[str, Any]) -> None:
+    lct = LayeredConfigTree(getter_dict)
+
+    assert lct.get_tree("outer_layer_2").to_dict() == getter_dict["outer_layer_2"]
+    with pytest.raises(ConfigurationError, match="must return a LayeredConfigTree"):
+        lct.get_tree("outer_layer_1")
+    with pytest.raises(ConfigurationError, match="No value at name"):
+        lct.get_tree("fake_key")
 
 
 def test_equals() -> None:
