@@ -1,3 +1,7 @@
+**2.0.3 - 10/30/2024**
+
+ - Add getter methods
+
 **2.0.2 - 08/01/2024**
 
  - Create explicit iterator for LayeredConfigTree
