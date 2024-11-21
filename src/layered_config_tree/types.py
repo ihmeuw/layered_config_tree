@@ -1,10 +1,8 @@
-from __future__ import annotations
-
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Union
+from typing import TYPE_CHECKING, Any, TypeVar
 
 if TYPE_CHECKING:
     from layered_config_tree import LayeredConfigTree
 
 # Data input types
-InputData = Union[dict[str, Any], str, Path, "LayeredConfigTree"]
+InputData = TypeVar("InputData", dict[str, Any], str, Path, "LayeredConfigTree")
