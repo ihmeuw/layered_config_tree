@@ -1,4 +1,5 @@
 import pickle
+import re
 import textwrap
 from pathlib import Path
 from typing import Any
@@ -341,6 +342,36 @@ def test_dictionary_style_access() -> None:
 
     assert lct["test_key2"] == "test_value2"
     assert lct["test_key"] == "test_value"
+
+
+def test_dunder_key_attr_style_access() -> None:
+    lct = LayeredConfigTree()
+    lct.update({"__dunder_key__": "val"})
+    assert lct["__dunder_key__"] == "val"
+
+    with pytest.raises(
+        RuntimeError,
+        match=re.escape(
+            "Cannot get an attribute starting and ending with '__' via attribute "
+            "access (i.e. dot notation). Use dictionary access instead "
+            "(i.e. bracket notation)."
+        ),
+    ):
+        lct.__dunder_key__
+
+    with pytest.raises(
+        RuntimeError,
+        match=re.escape(
+            "Cannot set an attribute starting and ending with '__' via attribute "
+            "access (i.e. dot notation). Use dicationary access instead "
+            "(i.e. bracket notation)."
+        ),
+    ):
+        lct.__dunder_key__ = "val2"
+    assert lct["__dunder_key__"] == "val"
+
+    with pytest.raises(AttributeError):
+        lct.__non_existent_dunder_key__
 
 
 def test_get_missing_key() -> None:
