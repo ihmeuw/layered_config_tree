@@ -382,9 +382,12 @@ def test_get_missing_key() -> None:
 
 def test_set_missing_key() -> None:
     lct = LayeredConfigTree()
-    with pytest.raises(ConfigurationKeyError):
+    error_msg = re.escape(
+        "New configuration keys can only be created with the update method."
+    )
+    with pytest.raises(ConfigurationKeyError, match=error_msg):
         lct.missing_key = "test_value"
-    with pytest.raises(ConfigurationKeyError):
+    with pytest.raises(ConfigurationKeyError, match=error_msg):
         lct["missing_key"] = "test_value"
 
 
