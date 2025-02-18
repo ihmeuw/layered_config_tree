@@ -565,7 +565,7 @@ class LayeredConfigTree:
         if name.startswith("__") and name.endswith("__"):
             raise RuntimeError(
                 "Cannot set an attribute starting and ending with '__' via attribute "
-                "access (i.e. dot notation). Use dicationary access instead "
+                "access (i.e. dot notation). Use dictionary access instead "
                 "(i.e. bracket notation)."
             )
         self._set_with_metadata(name, value, layer=None, source=None)

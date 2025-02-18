@@ -363,7 +363,7 @@ def test_dunder_key_attr_style_access() -> None:
         RuntimeError,
         match=re.escape(
             "Cannot set an attribute starting and ending with '__' via attribute "
-            "access (i.e. dot notation). Use dicationary access instead "
+            "access (i.e. dot notation). Use dictionary access instead "
             "(i.e. bracket notation)."
         ),
     ):
