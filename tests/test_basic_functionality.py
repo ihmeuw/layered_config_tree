@@ -12,6 +12,7 @@ from layered_config_tree import (
     ConfigurationError,
     ConfigurationKeyError,
     DuplicatedConfigurationError,
+    ImproperAccessError,
     LayeredConfigTree,
 )
 
@@ -350,7 +351,7 @@ def test_dunder_key_attr_style_access() -> None:
     assert lct["__dunder_key__"] == "val"
 
     with pytest.raises(
-        RuntimeError,
+        ImproperAccessError,
         match=re.escape(
             "Cannot get an attribute starting and ending with '__' via attribute "
             "access (i.e. dot notation). Use dictionary access instead "
@@ -360,7 +361,7 @@ def test_dunder_key_attr_style_access() -> None:
         lct.__dunder_key__
 
     with pytest.raises(
-        RuntimeError,
+        ImproperAccessError,
         match=re.escape(
             "Cannot set an attribute starting and ending with '__' via attribute "
             "access (i.e. dot notation). Use dictionary access instead "

@@ -39,6 +39,7 @@ from layered_config_tree import (
     ConfigurationError,
     ConfigurationKeyError,
     DuplicatedConfigurationError,
+    ImproperAccessError,
 )
 from layered_config_tree.types import InputData
 
@@ -563,7 +564,7 @@ class LayeredConfigTree:
                 self._name,
             )
         if name.startswith("__") and name.endswith("__"):
-            raise RuntimeError(
+            raise ImproperAccessError(
                 "Cannot set an attribute starting and ending with '__' via attribute "
                 "access (i.e. dot notation). Use dictionary access instead "
                 "(i.e. bracket notation)."
@@ -604,7 +605,7 @@ class LayeredConfigTree:
         if name.startswith("__") and name.endswith("__"):
             if name not in self:
                 raise AttributeError  # Do not change from AttributeError
-            raise RuntimeError(
+            raise ImproperAccessError(
                 "Cannot get an attribute starting and ending with '__' via attribute "
                 "access (i.e. dot notation). Use dictionary access instead "
                 "(i.e. bracket notation)."
