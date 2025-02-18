@@ -345,8 +345,8 @@ def test_dictionary_style_access() -> None:
 
 
 def test_dunder_key_attr_style_access() -> None:
-    lct = LayeredConfigTree()
-    lct.update({"__dunder_key__": "val"})
+    lct = LayeredConfigTree({"__dunder_key__": "val"}, layers=["layer1", "layer2"])
+    # lct.update({"__dunder_key__": "val"})
     assert lct["__dunder_key__"] == "val"
 
     with pytest.raises(
@@ -369,6 +369,10 @@ def test_dunder_key_attr_style_access() -> None:
     ):
         lct.__dunder_key__ = "val2"
     assert lct["__dunder_key__"] == "val"
+
+    # check that we can modify the value in a new layer
+    lct["__dunder_key__"] = "val2"
+    assert lct["__dunder_key__"] == "val2"
 
     with pytest.raises(AttributeError):
         lct.__non_existent_dunder_key__
