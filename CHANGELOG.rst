@@ -1,4 +1,4 @@
-**3.0.0 - 02/14/2025**
+**3.0.0 - 02/18/2025**
 
  - Better handle dunder-style keys
 
