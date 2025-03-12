@@ -698,6 +698,7 @@ def load_yaml(data: str | Path) -> dict[str, Any]:
     text which is loaded directly into a dictionary.
     """
 
+    data_dict: dict[str, Any]
     if (isinstance(data, str) and data.endswith((".yaml", ".yml"))) or isinstance(data, Path):
         # 'data' is a filepath to a yaml file
         with open(data) as f:
