@@ -464,17 +464,17 @@ class LayeredConfigTree:
         elif (isinstance(data, str) and data.endswith((".yaml", ".yml"))) or isinstance(
             data, Path
         ):
+            # 'data' is a filepath to a yaml file
             source = source if source else str(data)
-            with open(data) as f:
-                data_file = f.read()
-            coerced_data = yaml.full_load(data_file)
+            coerced_data = load_yaml(data)
             if not isinstance(coerced_data, dict):
                 raise ValueError(
                     f"Loaded yaml file {coerced_data} should be a dictionary but is type {type(coerced_data)}"
                 )
             return coerced_data, source
         elif isinstance(data, str):
-            data = yaml.full_load(data)
+            # 'data' is a yaml string
+            data = load_yaml(data)
             if not isinstance(data, dict):
                 raise ValueError(
                     f"Loaded yaml file {data} should be a dictionary but is type {type(data)}"
@@ -671,3 +671,39 @@ class LayeredConfigTree:
 
     def __eq__(self, other: object) -> bool:
         raise NotImplementedError
+
+
+# class UniqueKeyHandler(SafeLoader):
+#     ...
+
+
+def load_yaml(data: str | Path) -> dict[str, Any]:
+    """Loads a YAML filepath or string into a dictionary.
+
+    Parameters
+    ----------
+    data
+        The YAML content to load. This can be a file path to a YAML file or a string
+        containing YAML-formatted text.
+
+    Returns
+    -------
+        A dictionary representation of the loaded YAML content.
+
+    Notes
+    -----
+    If `data` is a Path object or a string that ends with ".yaml" or ".yml", it is
+    treated as a filepath and this function loads the file. Otherwise, `data` is a
+    string that does _not_ end in ".yaml" or ".yml" and it is treated as YAML-formatted
+    text which is loaded directly into a dictionary.
+    """
+
+    if (isinstance(data, str) and data.endswith((".yaml", ".yml"))) or isinstance(data, Path):
+        # 'data' is a filepath to a yaml file
+        with open(data) as f:
+            data_file = f.read()
+        data_dict = yaml.safe_load(data_file)
+    else:
+        # 'data' is a yaml string
+        data_dict = yaml.safe_load(data)
+    return data_dict

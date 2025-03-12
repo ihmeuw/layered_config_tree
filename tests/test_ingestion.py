@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import pytest
+
 from layered_config_tree import LayeredConfigTree
 
 TEST_YAML_ONE = """
@@ -21,12 +23,14 @@ def test_load_yaml_string() -> None:
     assert lct.test_section2.test_key == "test_value3"
 
 
-def test_load_yaml_file(tmp_path: Path) -> None:
+@pytest.mark.parametrize("path_type", [str, Path])
+def test_load_yaml_file(tmp_path: Path, path_type: type[str | Path]) -> None:
     tmp_file = tmp_path / "test_file.yaml"
     tmp_file.write_text(TEST_YAML_ONE)
 
     lct = LayeredConfigTree()
-    lct.update(str(tmp_file))
+    filepath_to_test = str(tmp_file) if path_type is str else tmp_file
+    lct.update(filepath_to_test)
 
     assert lct.test_section.test_key == "test_value"
     assert lct.test_section.test_key2 == "test_value2"
