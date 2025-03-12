@@ -39,6 +39,7 @@ from layered_config_tree import (
     ConfigurationError,
     ConfigurationKeyError,
     DuplicatedConfigurationError,
+    DuplicateKeysInYAMLError,
     ImproperAccessError,
 )
 from layered_config_tree.types import InputData
@@ -673,10 +674,6 @@ class LayeredConfigTree:
         raise NotImplementedError
 
 
-# class UniqueKeyHandler(SafeLoader):
-#     ...
-
-
 def load_yaml(data: str | Path) -> dict[str, Any]:
     """Loads a YAML filepath or string into a dictionary.
 
@@ -703,8 +700,42 @@ def load_yaml(data: str | Path) -> dict[str, Any]:
         # 'data' is a filepath to a yaml file
         with open(data) as f:
             data_file = f.read()
-        data_dict = yaml.safe_load(data_file)
+        data_dict = yaml.load(data_file, Loader=SafeLoader)
     else:
         # 'data' is a yaml string
-        data_dict = yaml.safe_load(data)
+        data_dict = yaml.load(data, Loader=SafeLoader)
     return data_dict
+
+
+class SafeLoader(yaml.SafeLoader):
+    """A yaml.SafeLoader that restricts duplicate keys."""
+
+    def construct_mapping(self, node, deep=False):
+        """Constructs the standard mapping after checking for duplicates.
+
+        Raises
+        ------
+        DuplicateKeysInYAMLError
+            If duplicate keys within the same level are detected in the YAML file
+            being loaded.
+
+        Notes
+        -----
+        The duplicate key check is performed _only at the level of the mapping being
+        currently constructed_. This means that if the YAML document contains nested
+        mappings, each mapping is checked independently for duplicates. As a result,
+        fixing a duplicate in one level of the document will not prevent this method
+        from raising an error for duplicates in another upon subsequent loads.
+        """
+        mapping = []
+        duplicates = []
+        for key_node, _value_node in node.value:
+            key = self.construct_object(key_node, deep=deep)
+            if key in mapping:
+                duplicates.append(key)
+            mapping.append(key)
+        if duplicates:
+            raise DuplicateKeysInYAMLError(
+                f"Duplicate key(s) detected in YAML file being loaded: {duplicates}"
+            )
+        return super().construct_mapping(node, deep)

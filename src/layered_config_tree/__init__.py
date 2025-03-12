@@ -12,6 +12,7 @@ from layered_config_tree.exceptions import (
     ConfigurationError,
     ConfigurationKeyError,
     DuplicatedConfigurationError,
+    DuplicateKeysInYAMLError,
     ImproperAccessError,
 )
 from layered_config_tree.main import ConfigNode, LayeredConfigTree, load_yaml

@@ -1,8 +1,9 @@
+import re
 from pathlib import Path
 
 import pytest
 
-from layered_config_tree import LayeredConfigTree
+from layered_config_tree import ConfigurationError, LayeredConfigTree
 
 TEST_YAML_ONE = """
 test_section:
@@ -11,6 +12,26 @@ test_section:
 test_section2:
     test_key: test_value3
     test_key2: test_value4
+"""
+
+TEST_YAML_DUPLICATE_KEYS = """
+cats:
+    simba:
+        size: tiny
+        features:
+            - cute
+            - playful
+        color: brown
+    garfield:
+        size: chonky
+        features:
+            - lazy
+            - fat
+        color: orange
+        size:
+            - thick
+        features:
+            - lasagna lover
 """
 
 
@@ -35,3 +56,23 @@ def test_load_yaml_file(tmp_path: Path, path_type: type[str | Path]) -> None:
     assert lct.test_section.test_key == "test_value"
     assert lct.test_section.test_key2 == "test_value2"
     assert lct.test_section2.test_key == "test_value3"
+
+
+@pytest.mark.parametrize("duplicates", [True, False])
+def test_load_yaml_duplicates(tmp_path: Path, duplicates: bool) -> None:
+    tmp_file = tmp_path / "test_dupliate_keys.yaml"
+    test_yaml = TEST_YAML_DUPLICATE_KEYS if duplicates else TEST_YAML_ONE
+    tmp_file.write_text(test_yaml)
+
+    lct = LayeredConfigTree()
+    if duplicates:
+        with pytest.raises(
+            ConfigurationError,
+            match=re.escape(
+                "Duplicate key(s) detected in YAML file being loaded: ['size', 'features']"
+            ),
+        ):
+            lct.update(tmp_file)
+    else:
+        # Only duplicate keys on the same level are problematic!
+        lct.update(tmp_file)
