@@ -39,8 +39,8 @@ from layered_config_tree import (
     DuplicatedConfigurationError,
     ImproperAccessError,
 )
-from layered_config_tree.utilities import load_yaml
 from layered_config_tree.types import InputData
+from layered_config_tree.utilities import load_yaml
 
 
 class ConfigNode:
