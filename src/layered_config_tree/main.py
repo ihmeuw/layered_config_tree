@@ -461,12 +461,16 @@ class LayeredConfigTree:
         """Coerces data into dictionary format."""
         if isinstance(data, dict):
             return data, source
-        elif (isinstance(data, str) and data.endswith((".yaml", ".yml"))) or isinstance(
+        
+        if isinstance(data, LayeredConfigTree):
+            return data.to_dict(), source
+        
+        coerced_data = load_yaml(data)
+        if (isinstance(data, str) and data.endswith((".yaml", ".yml"))) or isinstance(
             data, Path
         ):
             # 'data' is a filepath to a yaml file
             source = source if source else str(data)
-            coerced_data = load_yaml(data)
             if not isinstance(coerced_data, dict):
                 raise ValueError(
                     f"Loaded yaml file {coerced_data} should be a dictionary but is type {type(coerced_data)}"
@@ -474,14 +478,11 @@ class LayeredConfigTree:
             return coerced_data, source
         elif isinstance(data, str):
             # 'data' is a yaml string
-            data = load_yaml(data)
-            if not isinstance(data, dict):
+            if not isinstance(coerced_data, dict):
                 raise ValueError(
-                    f"Loaded yaml file {data} should be a dictionary but is type {type(data)}"
+                    f"Loaded yaml file {coerced_data} should be a dictionary but is type {type(coerced_data)}"
                 )
-            return data, source
-        elif isinstance(data, LayeredConfigTree):
-            return data.to_dict(), source
+            return coerced_data, source
         else:
             raise ConfigurationError(
                 f"LayeredConfigTree can only update from dictionaries, strings, paths and LayeredConfigTrees. "
