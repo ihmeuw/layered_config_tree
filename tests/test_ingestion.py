@@ -24,14 +24,14 @@ cats:
         color: brown
     garfield:
         size: chonky
-        features:
+        traits:
             - lazy
-            - fat
+            - grumpy
         color: orange
         size:
             - thick
-        features:
-            - lasagna lover
+        traits:
+            - loves lasagna
 """
 
 
@@ -69,7 +69,7 @@ def test_load_yaml_duplicates(tmp_path: Path, duplicates: bool) -> None:
         with pytest.raises(
             ConfigurationError,
             match=re.escape(
-                "Duplicate key(s) detected in YAML file being loaded: ['size', 'features']"
+                "Duplicate key(s) detected in YAML file being loaded: ['size', 'traits']"
             ),
         ):
             lct.update(tmp_file)
