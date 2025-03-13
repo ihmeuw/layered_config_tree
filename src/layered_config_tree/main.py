@@ -39,7 +39,6 @@ from layered_config_tree import (
     ConfigurationError,
     ConfigurationKeyError,
     DuplicatedConfigurationError,
-    DuplicateKeysInYAMLError,
     ImproperAccessError,
 )
 from layered_config_tree.types import InputData
@@ -711,9 +710,21 @@ class SafeLoader(yaml.SafeLoader):
     """A yaml.SafeLoader that restricts duplicate keys."""
 
     def construct_mapping(
-        self, node: yaml.MappingNode, deep: bool = False
+        self,
+        node: yaml.MappingNode,
+        deep: bool = False,
+        path: list[str] | None = None,
     ) -> dict[Hashable, Any]:
         """Constructs the standard mapping after checking for duplicates.
+
+        Parameters
+        ----------
+        node
+            The YAML mapping node to construct.
+        deep
+            Whether or not to recursively construct mappings.
+        path
+            The path to the current node in the YAML document.
 
         Raises
         ------
@@ -729,15 +740,28 @@ class SafeLoader(yaml.SafeLoader):
         fixing a duplicate in one level of the document will not prevent this method
         from raising an error for duplicates in another upon subsequent loads.
         """
-        mapping = []
-        duplicates = []
-        for key_node, _value_node in node.value:
+        path = [] if path is None else path
+        seen = set()
+        duplicates = {}
+        for key_node, value_node in node.value:
             key = self.construct_object(key_node, deep=deep)  # type: ignore[no-untyped-call]
-            if key in mapping:
-                duplicates.append(key)
-            mapping.append(key)
+            full_path = path + [key]
+            if key in seen:
+                duplicates[key] = full_path
+            else:
+                seen.add(key)
+            # update path
+            if isinstance(value_node, yaml.MappingNode):
+                self.construct_mapping(value_node, deep, full_path)
         if duplicates:
-            raise DuplicateKeysInYAMLError(
-                f"Duplicate key(s) detected in YAML file being loaded: {duplicates}"
+            formatted_duplicates = "\n".join(
+                [f"* {'-'.join(map(str, v))}" for v in duplicates.values()]
+            )
+            raise DuplicatedConfigurationError(
+                f"Duplicate key(s) detected in YAML file being loaded:\n{formatted_duplicates}",
+                name=f"duplicates_{'_'.join(duplicates)}",
+                layer=None,
+                source=None,
+                value=None,
             )
         return super().construct_mapping(node, deep)

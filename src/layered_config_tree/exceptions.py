@@ -47,9 +47,3 @@ class DuplicatedConfigurationError(ConfigurationError):
         self.source = source
         self.value = value
         super().__init__(message, name)
-
-
-class DuplicateKeysInYAMLError(ConfigurationError):
-    """Error raised when a YAML file contains duplicate keys."""
-
-    pass

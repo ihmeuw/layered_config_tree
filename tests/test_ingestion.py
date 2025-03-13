@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from layered_config_tree import ConfigurationError, LayeredConfigTree
+from layered_config_tree import DuplicatedConfigurationError, LayeredConfigTree
 
 TEST_YAML_ONE = """
 test_section:
@@ -67,9 +67,9 @@ def test_load_yaml_duplicates(tmp_path: Path, duplicates: bool) -> None:
     lct = LayeredConfigTree()
     if duplicates:
         with pytest.raises(
-            ConfigurationError,
+            DuplicatedConfigurationError,
             match=re.escape(
-                "Duplicate key(s) detected in YAML file being loaded: ['size', 'traits']"
+                "Duplicate key(s) detected in YAML file being loaded:\n* cats-garfield-size\n* cats-garfield-traits"
             ),
         ):
             lct.update(tmp_file)
