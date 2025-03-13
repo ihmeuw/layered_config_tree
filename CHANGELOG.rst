@@ -1,4 +1,4 @@
-**4.0.0 - 03/13/2025**
+**3.1.0 - 03/13/2025**
 
  - Raise an error if YAML contains duplicate keys within the same level
 
