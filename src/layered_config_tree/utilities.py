@@ -61,18 +61,21 @@ class SafeLoader(yaml.SafeLoader):
 
     def construct_mapping(self, node, deep=False):
         """Constructs the standard mapping after checking for duplicates.
+
         Raises
         ------
         DuplicateKeysInYAMLError
             If duplicate keys within the same level are detected in the YAML file
             being loaded.
+        
         Notes
         -----
-        The duplicate key check is performed _only at the level of the mapping being
-        currently constructed_. This means that if the YAML document contains nested
-        mappings, each mapping is checked independently for duplicates. As a result,
-        fixing a duplicate in one level of the document will not prevent this method
-        from raising an error for duplicates in another upon subsequent loads.
+        A key is considered a duplicate only if it is the sa me as another key
+        _at the same level in the YAML_.
+
+        This raises upon the _first_ duplicate key found; other duplicates may exist
+        (in which case a new error will be raised upon re-loading of the YAML file
+        once the duplicate is resolved).
         """
         mapping = []
         for key_node, _value_node in node.value:
