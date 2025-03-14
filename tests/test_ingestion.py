@@ -59,20 +59,26 @@ def test_load_yaml_file(tmp_path: Path, path_type: type[str | Path]) -> None:
 
 
 @pytest.mark.parametrize("duplicates", [True, False])
-def test_load_yaml_duplicates(tmp_path: Path, duplicates: bool) -> None:
-    tmp_file = tmp_path / "test_dupliate_keys.yaml"
+@pytest.mark.parametrize("load_from_file", [True, False])
+def test_load_yaml_duplicates_raise(
+    duplicates: bool, load_from_file: bool, tmp_path: Path
+) -> None:
     test_yaml = TEST_YAML_DUPLICATE_KEYS if duplicates else TEST_YAML_ONE
-    tmp_file.write_text(test_yaml)
+    if load_from_file:
+        tmp_file = tmp_path / "test_dupliate_keys.yaml"
+        tmp_file.write_text(test_yaml)
+        test_yaml = tmp_file
 
     lct = LayeredConfigTree()
+
     if duplicates:
         with pytest.raises(
             DuplicatedConfigurationError,
             match=re.escape(
-                "Duplicate key(s) detected in YAML file being loaded: cats-garfield-size"
+                "Duplicate key detected at same level of YAML: size. Resolve duplicates and try again."
             ),
         ):
-            lct.update(tmp_file)
+            lct.update(test_yaml)
     else:
         # Only duplicate keys on the same level are problematic!
-        lct.update(tmp_file)
+        lct.update(test_yaml)

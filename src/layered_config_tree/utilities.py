@@ -8,7 +8,6 @@ package.
 
 """
 
-from collections.abc import Hashable
 from pathlib import Path
 from typing import Any
 
@@ -60,84 +59,31 @@ def load_yaml(data: str | Path) -> dict[str, Any]:
 class SafeLoader(yaml.SafeLoader):
     """A yaml.SafeLoader that restricts duplicate keys."""
 
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
-        """Initialize the SafeLoader with an empty `path` list."""
-        super().__init__(*args, **kwargs)
-        self.path: list[str] = []
-
-    def construct_mapping(
-        self,
-        node: yaml.MappingNode,
-        deep: bool = False,
-    ) -> dict[Hashable, Any]:
+    def construct_mapping(self, node, deep=False):
         """Constructs the standard mapping after checking for duplicates.
-
-        This is a custom implementation of the `construct_mapping` method from
-        the `yaml.SafeLoader` class. It is designed to construct a standard
-        Python mapping (dictionary) from a YAML mapping node while enforcing
-        the constraint that duplicate keys within a given level results in an
-        error being raised.
-
-        Parameters
-        ----------
-        node
-            The YAML mapping node to construct.
-        deep
-            Whether or not to recursively construct mappings.
-
         Raises
         ------
         DuplicateKeysInYAMLError
             If duplicate keys within the same level are detected in the YAML file
             being loaded.
-
         Notes
         -----
-        A key is considered a duplicate only if it is at the same level as the other
-        key of the same name; any number of keys can have the same value as long as
-        they are all at different levels in the hierarchy.
-
-        This raises upon the _first_ duplicate key found; other duplicates may exist.
-
+        The duplicate key check is performed _only at the level of the mapping being
+        currently constructed_. This means that if the YAML document contains nested
+        mappings, each mapping is checked independently for duplicates. As a result,
+        fixing a duplicate in one level of the document will not prevent this method
+        from raising an error for duplicates in another upon subsequent loads.
         """
-
-        if not isinstance(node, yaml.MappingNode):
-            raise yaml.constructor.ConstructorError(
-                None, None, "expected a mapping node, but found %s" % node.id, node.start_mark
-            )
-        self.flatten_mapping(node)
-        mapping = {}
-        for key_node, value_node in node.value:
+        mapping = []
+        for key_node, _value_node in node.value:
             key = self.construct_object(key_node, deep=deep)
             if key in mapping:
-                full_path = "-".join(self.path + [key])
                 raise DuplicatedConfigurationError(
-                    f"Duplicate key(s) detected in YAML file being loaded: {full_path}",
+                    f"Duplicate key detected at same level of YAML: {key}. Resolve duplicates and try again.",
                     name=f"duplicated_{key}",
                     layer=None,
                     source=None,
                     value=None,
                 )
-            if not isinstance(key, Hashable):
-                raise yaml.constructor.ConstructorError(
-                    "while constructing a mapping",
-                    node.start_mark,
-                    "found unhashable key",
-                    key_node.start_mark,
-                )
-            self.path.append(str(key))
-            value = self.construct_object(value_node, deep=deep)
-            mapping[key] = value
-            self.path.pop()
-        return mapping
-
-    def construct_object(self, node: Any, deep: bool = False) -> Any:
-        if isinstance(node, yaml.MappingNode):
-            # For mapping nodes, manage the path directly in construct_mapping
-            return self.construct_mapping(node, deep=deep)
-        elif isinstance(node, yaml.SequenceNode):
-            # For sequence nodes, handle each item without altering the path
-            return [self.construct_object(child, deep) for child in node.value]
-        else:
-            # For scalar nodes, simply return the value without path manipulation
-            return super().construct_object(node, deep=deep)  # type: ignore[no-untyped-call]
+            mapping.append(key)
+        return super().construct_mapping(node, deep)
