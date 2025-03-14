@@ -26,6 +26,11 @@ def load_yaml(data: str | Path) -> dict[str, Any]:
         The YAML content to load. This can be a file path to a YAML file or a string
         containing YAML-formatted text.
 
+    Raises
+    ------
+    ValueError
+        If the loaded YAML content is not a dictionary.
+
     Returns
     -------
         A dictionary representation of the loaded YAML content.
@@ -38,25 +43,27 @@ def load_yaml(data: str | Path) -> dict[str, Any]:
     text which is loaded directly into a dictionary.
     """
 
-    data_dict: dict[str, Any]
     if (isinstance(data, str) and data.endswith((".yaml", ".yml"))) or isinstance(data, Path):
-        # 'data' is a filepath to a yaml file
+        # 'data' is a filepath to a yaml file (rather than a yaml string)
         with open(data) as f:
-            data_file = f.read()
-        data_dict = yaml.load(data_file, Loader=SafeLoader)
-    else:
-        # 'data' is a yaml string
-        data_dict = yaml.load(data, Loader=SafeLoader)
+            data = f.read()
+    data_dict: dict[str, Any] = yaml.load(data, Loader=SafeLoader)
+
+    if not isinstance(data_dict, dict):
+        raise ValueError(
+            f"Loaded yaml file {data_dict} should be a dictionary but is type {type(data_dict)}"
+        )
+
     return data_dict
 
 
 class SafeLoader(yaml.SafeLoader):
     """A yaml.SafeLoader that restricts duplicate keys."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Initialize the SafeLoader with an empty `path` list."""
         super().__init__(*args, **kwargs)
-        self.path = []
+        self.path: list[str] = []
 
     def construct_mapping(
         self,
@@ -118,13 +125,13 @@ class SafeLoader(yaml.SafeLoader):
                     "found unhashable key",
                     key_node.start_mark,
                 )
-            self.path.append(key)
+            self.path.append(str(key))
             value = self.construct_object(value_node, deep=deep)
             mapping[key] = value
             self.path.pop()
         return mapping
 
-    def construct_object(self, node, deep=False):
+    def construct_object(self, node: Any, deep: bool = False) -> Any:
         if isinstance(node, yaml.MappingNode):
             # For mapping nodes, manage the path directly in construct_mapping
             return self.construct_mapping(node, deep=deep)
@@ -133,4 +140,4 @@ class SafeLoader(yaml.SafeLoader):
             return [self.construct_object(child, deep) for child in node.value]
         else:
             # For scalar nodes, simply return the value without path manipulation
-            return super().construct_object(node, deep=deep)
+            return super().construct_object(node, deep=deep)  # type: ignore[no-untyped-call]
