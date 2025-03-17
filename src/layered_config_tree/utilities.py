@@ -67,7 +67,7 @@ class SafeLoader(yaml.SafeLoader):
         DuplicateKeysInYAMLError
             If duplicate keys within the same level are detected in the YAML file
             being loaded.
-        
+
         Notes
         -----
         A key is considered a duplicate only if it is the sa me as another key
