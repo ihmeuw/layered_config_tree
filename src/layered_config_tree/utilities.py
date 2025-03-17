@@ -8,6 +8,7 @@ package.
 
 """
 
+from collections.abc import Hashable
 from pathlib import Path
 from typing import Any
 
@@ -59,7 +60,9 @@ def load_yaml(data: str | Path) -> dict[str, Any]:
 class SafeLoader(yaml.SafeLoader):
     """A yaml.SafeLoader that restricts duplicate keys."""
 
-    def construct_mapping(self, node, deep=False):
+    def construct_mapping(
+        self, node: yaml.MappingNode, deep: bool = False
+    ) -> dict[Hashable, Any]:
         """Constructs the standard mapping after checking for duplicates.
 
         Raises
@@ -79,7 +82,7 @@ class SafeLoader(yaml.SafeLoader):
         """
         mapping = []
         for key_node, _value_node in node.value:
-            key = self.construct_object(key_node, deep=deep)
+            key = self.construct_object(key_node, deep=deep)  # type: ignore[no-untyped-call]
             if key in mapping:
                 raise DuplicatedConfigurationError(
                     f"Duplicate key detected at same level of YAML: {key}. Resolve duplicates and try again.",

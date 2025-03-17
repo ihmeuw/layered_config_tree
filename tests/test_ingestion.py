@@ -63,11 +63,11 @@ def test_load_yaml_file(tmp_path: Path, path_type: type[str | Path]) -> None:
 def test_load_yaml_duplicates_raise(
     duplicates: bool, load_from_file: bool, tmp_path: Path
 ) -> None:
-    test_yaml = TEST_YAML_DUPLICATE_KEYS if duplicates else TEST_YAML_ONE
+    test_str: str = TEST_YAML_DUPLICATE_KEYS if duplicates else TEST_YAML_ONE
     if load_from_file:
         tmp_file = tmp_path / "test_dupliate_keys.yaml"
-        tmp_file.write_text(test_yaml)
-        test_yaml = tmp_file
+        tmp_file.write_text(test_str)
+    test_yaml = tmp_file if load_from_file else test_str
 
     lct = LayeredConfigTree()
 
