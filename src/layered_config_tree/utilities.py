@@ -73,7 +73,7 @@ class SafeLoader(yaml.SafeLoader):
 
         Notes
         -----
-        A key is considered a duplicate only if it is the sa me as another key
+        A key is considered a duplicate only if it is the same as another key
         _at the same level in the YAML_.
 
         This raises upon the _first_ duplicate key found; other duplicates may exist

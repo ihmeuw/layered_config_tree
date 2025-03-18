@@ -65,7 +65,7 @@ def test_load_yaml_duplicates_raise(
 ) -> None:
     test_str: str = TEST_YAML_DUPLICATE_KEYS if duplicates else TEST_YAML_ONE
     if load_from_file:
-        tmp_file = tmp_path / "test_dupliate_keys.yaml"
+        tmp_file = tmp_path / "test_duplicate_keys.yaml"
         tmp_file.write_text(test_str)
     test_yaml = tmp_file if load_from_file else test_str
 
