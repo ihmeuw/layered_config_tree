@@ -526,26 +526,27 @@ def test_get_single_values(
         assert lct.get(key, default_value) == expected_value
 
 
-def test_get_chained(nested_dict: dict[str, Any]) -> None:
+def test_get_chained_tree(nested_dict: dict[str, Any]) -> None:
     lct = LayeredConfigTree(nested_dict)
-
-    # Check that returning a LayeredConfigTree works as expected
     assert (
         lct.get("outer_layer_3").get("inner_layer_1").to_dict()
         == lct.get(["outer_layer_3", "inner_layer_1"]).to_dict()
         == nested_dict["outer_layer_3"]["inner_layer_1"]
     )
 
-    # Check that we can get a value from a nested dict
+
+def test_get_chained_value(nested_dict: dict[str, Any]) -> None:
+    lct = LayeredConfigTree(nested_dict)
     assert (
         lct.get("outer_layer_3").get("inner_layer_1").get("inner_layer_2")
         == lct.get(["outer_layer_3", "inner_layer_1", "inner_layer_2"])
         == nested_dict["outer_layer_3"]["inner_layer_1"]["inner_layer_2"]
     )
 
-    # Check that the default works
-    lct.get(["outer_layer_3", "missing_key"], "foo") == "foo"
 
+def test_get_chained_default(nested_dict: dict[str, Any]) -> None:
+    lct = LayeredConfigTree(nested_dict)
+    lct.get(["outer_layer_3", "missing_key"], "foo") == "foo"
     # Check that the default only works for the last key
     with pytest.raises(
         ConfigurationKeyError,
@@ -554,23 +555,19 @@ def test_get_chained(nested_dict: dict[str, Any]) -> None:
         lct.get(["outer_layer_3", "whoops", "missing_key"], "foo")
 
 
-def test_get_default_values(nested_dict: dict[str, Any]) -> None:
-    lct = LayeredConfigTree(nested_dict)
-
-    assert lct.get("fake_key") is None
-
-    default_value = lct.get("fake_key", {})
-    # checking default_value equals {} is not enough for mypy to know it's a dict
-    assert default_value == {} and isinstance(default_value, dict)
-    assert default_value.get("another_fake_key") is None
-
-
 def test_get_tree(nested_dict: dict[str, Any]) -> None:
     lct = LayeredConfigTree(nested_dict)
-
     assert lct.get_tree("outer_layer_2").to_dict() == nested_dict["outer_layer_2"]
+
+
+def test_get_tree_returns_value_raises(nested_dict: dict[str, Any]) -> None:
+    lct = LayeredConfigTree(nested_dict)
     with pytest.raises(ConfigurationError, match="must return a LayeredConfigTree"):
         lct.get_tree("outer_layer_1")
+
+
+def test_get_tree_missing_key_raises(nested_dict: dict[str, Any]) -> None:
+    lct = LayeredConfigTree(nested_dict)
     with pytest.raises(
         ConfigurationError, match=re.escape("No value at key mapping '['fake_key']'.")
     ):
@@ -579,21 +576,26 @@ def test_get_tree(nested_dict: dict[str, Any]) -> None:
 
 def test_get_tree_chained(nested_dict: dict[str, Any]) -> None:
     lct = LayeredConfigTree(nested_dict)
-
     assert (
         lct.get_tree("outer_layer_3").get_tree("inner_layer_1").to_dict()
         == lct.get_tree(["outer_layer_3", "inner_layer_1"]).to_dict()
         == nested_dict["outer_layer_3"]["inner_layer_1"]
     )
 
+
+def test_get_tree_chained_returns_value_raises(nested_dict: dict[str, Any]) -> None:
+    lct = LayeredConfigTree(nested_dict)
+    with pytest.raises(ConfigurationError, match="get_tree must return a LayeredConfigTree"):
+        lct.get_tree(["outer_layer_3", "inner_layer_1", "inner_layer_2"])
+
+
+def test_get_tree_chained_missing_key_raises(nested_dict: dict[str, Any]) -> None:
+    lct = LayeredConfigTree(nested_dict)
     with pytest.raises(
         ConfigurationKeyError,
         match=re.escape("No value at key mapping '['outer_layer_3', 'whoops']'."),
     ):
         lct.get_tree(["outer_layer_3", "whoops"])
-
-    with pytest.raises(ConfigurationError, match="get_tree must return a LayeredConfigTree"):
-        lct.get_tree(["outer_layer_3", "inner_layer_1", "inner_layer_2"])
 
 
 def test_equals() -> None:

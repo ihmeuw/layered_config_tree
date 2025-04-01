@@ -375,8 +375,8 @@ class LayeredConfigTree:
             return self[keys] if keys in self._children else default_value
         else:
             # get the second-to-last value (which is by definition a LayeredConfigTree)
-            data = self.get_tree(keys[:-1])
-            return data[keys[-1]] if keys[-1] in data._children else default_value
+            tree = self.get_tree(keys[:-1])
+            return tree[keys[-1]] if keys[-1] in tree._children else default_value
 
     def get_tree(self, keys: str | list[str]) -> LayeredConfigTree:
         """Return the LayeredConfigTree at the key or key path from the outermost layer.
@@ -407,19 +407,19 @@ class LayeredConfigTree:
         if isinstance(keys, str):
             keys = [keys]
 
-        data = self
+        tree = self
         for key in keys:
-            if key not in data:
+            if key not in tree:
                 raise ConfigurationKeyError(
                     f"No value at key mapping '{keys[:keys.index(key) + 1]}'."
                 )
-            data = data[key]
-        if not isinstance(data, LayeredConfigTree):
+            tree = tree[key]
+        if not isinstance(tree, LayeredConfigTree):
             raise ConfigurationError(
-                f"The data you accessed using {keys} with get_tree was of type {type(data)}, "
+                f"The data you accessed using {keys} with get_tree was of type {type(tree)}, "
                 "but get_tree must return a LayeredConfigTree."
             )
-        return data
+        return tree
 
     def get_from_layer(self, name: str, layer: str | None = None) -> Any:
         """Get a configuration value from the provided layer.
