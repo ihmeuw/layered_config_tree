@@ -1,4 +1,4 @@
-**3.3.0 - 07/03/2025**
+**4.0.0 - 07/03/2025**
 
  - Deprecate get_from_layer() method
 
