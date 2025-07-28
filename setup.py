@@ -46,7 +46,7 @@ if __name__ == "__main__":
     ]
     setup_requirements = ["setuptools_scm"]
     test_requirements = [
-        "vivarium_dependencies[testing]",
+        "vivarium_dependencies[pytest]",
     ]
     doc_requirements = [
         "vivarium_dependencies[sphinx-rtd-theme,sphinx-click,plotting]",
