@@ -56,7 +56,6 @@ if __name__ == "__main__":
     dev_requirements = [
         "vivarium_dependencies[linting,mypy]",
         # typing extensions
-        "types-PyYAML",
         "types-setuptools",
     ]
 
