@@ -41,27 +41,20 @@ if __name__ == "__main__":
         long_description = f.read()
 
     install_requirements = [
+        "vivarium_dependencies[pyyaml]",
         "vivarium_build_utils>=2.0.1,<3.0.0",
-        "pyyaml>=5.1",
     ]
     setup_requirements = ["setuptools_scm"]
     test_requirements = [
-        "pytest",
-        "pytest-mock",
-        "pytest-cov",
+        "vivarium_dependencies[testing]",
     ]
     doc_requirements = [
+        "vivarium_dependencies[sphinx-rtd-theme,sphinx-click,plotting]",
         "sphinx>=4.0",
-        "sphinx-rtd-theme",
-        "sphinx-click",
-        "IPython",
-        "matplotlib",
         "sphinxcontrib-video",
     ]
     dev_requirements = [
-        "black==22.3.0",
-        "isort==5.13.2",
-        "mypy",
+        "vivarium_dependencies[linting,mypy]",
         # typing extensions
         "types-PyYAML",
         "types-setuptools",
