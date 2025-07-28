@@ -49,9 +49,12 @@ if __name__ == "__main__":
         "vivarium_dependencies[pytest]",
     ]
     doc_requirements = [
-        "vivarium_dependencies[sphinx-rtd-theme,sphinx-click,plotting]",
+        "vivarium_dependencies[sphinx-rtd-theme,sphinx-click,interactive]",
         "sphinx>=4.0",
         "sphinxcontrib-video",
+    ]
+    interactive_requirements = [
+        "vivarium_dependencies[interactive]",
     ]
     dev_requirements = [
         "vivarium_dependencies[formatting,mypy]",
@@ -87,8 +90,12 @@ if __name__ == "__main__":
         tests_require=test_requirements,
         extras_require={
             "docs": doc_requirements,
+            "interactive": interactive_requirements,
             "test": test_requirements,
-            "dev": doc_requirements + test_requirements + dev_requirements,
+            "dev": doc_requirements
+            + interactive_requirements
+            + test_requirements
+            + dev_requirements,
         },
         zip_safe=False,
         use_scm_version={
