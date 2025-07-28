@@ -54,7 +54,7 @@ if __name__ == "__main__":
         "sphinxcontrib-video",
     ]
     dev_requirements = [
-        "vivarium_dependencies[linting,mypy]",
+        "vivarium_dependencies[formatting,mypy]",
         # typing extensions
         "types-setuptools",
     ]
