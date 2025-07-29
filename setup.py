@@ -57,7 +57,7 @@ if __name__ == "__main__":
         "vivarium_dependencies[interactive]",
     ]
     dev_requirements = [
-        "vivarium_dependencies[formatting,mypy]",
+        "vivarium_dependencies[format,mypy]",
         # typing extensions
         "types-setuptools",
     ]
