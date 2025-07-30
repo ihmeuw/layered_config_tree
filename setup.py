@@ -49,15 +49,14 @@ if __name__ == "__main__":
         "vivarium_dependencies[pytest]",
     ]
     doc_requirements = [
-        "vivarium_dependencies[sphinx-rtd-theme,sphinx-click,interactive]",
-        "sphinx>=4.0",
+        "vivarium_dependencies[sphinx,sphinx-click,ipython,matplotlib]",
         "sphinxcontrib-video",
     ]
     interactive_requirements = [
         "vivarium_dependencies[interactive]",
     ]
     dev_requirements = [
-        "vivarium_dependencies[format,mypy]",
+        "vivarium_dependencies[lint]",
         # typing extensions
         "types-setuptools",
     ]
