@@ -4,7 +4,8 @@
 Getting Started
 ===============
 
-.. todo
+.. todo::
+
     MIC-6169. Below is a copy/paste from a slack thread that should be revised and
     improved upon.
 
