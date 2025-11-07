@@ -11,4 +11,4 @@ TBD.
    :maxdepth: 2
 
    api_reference/index
-
+   tutorials/index
