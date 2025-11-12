@@ -19,7 +19,7 @@ To highlight how ``.get()`` works, let's make a two-layer tree of cats and their
     # Add whipper with the incorrect color to the base layer
     tree.update({"pet": {"cat": {"whipper": "black"}}}, layer="base")
 
-    # Update whipper's color and add burt mackling to the override layer
+    # Update whipper's color and add burt macklin to the override layer
     tree.update({"pet": {"cat": {"whipper": "gray", "burt_macklin": "tuxedo"}}}, layer="override")
 
     tree
@@ -159,7 +159,7 @@ isn't actually a tree.
     tuxedo
     oops
 
-This works when trying to return a sub-tree as well.
+This works when using ``.get()`` to return a sub-tree as well.
 
 .. code-block:: python
 
@@ -260,7 +260,7 @@ since that layer doesn't exist for him:
 
 One final note. The interaction between default_value and layer may sometimes be 
 a cause of confusion. The default_value will only be returned when also providing 
-a specific layer iff the requested value doesn't exist at all. If the value does 
+a specific layer if and only if the requested value doesn't exist at all. If the value does 
 exist, just not at the requested layer, then you'll get the MissingLayerError.
 
 For example, let's get Garfield's color at the "base" layer (noting that Garfield
