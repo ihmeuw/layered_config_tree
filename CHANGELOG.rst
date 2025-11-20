@@ -1,3 +1,7 @@
+**4.0.6 - 11/20/25**
+
+  - Make name optional and handle bar args to 'make build-env'
+
 **4.0.5 - 11/12/2025**
 
  - Add API docs and a getting started guide
