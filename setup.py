@@ -43,7 +43,7 @@ if __name__ == "__main__":
     install_requirements = [
         "vivarium_dependencies[pyyaml]",
         # "vivarium_build_utils>=2.0.1,<3.0.0",
-        "vivarium_build_utils @ git+github.com/ihmeuw@vivarium_build_utils.git",
+        "vivarium_build_utils @ git+github.com/ihmeuw/vivarium_build_utils@sbachmei/mic-6635/stop-skipping-scheduled-builds",
     ]
     setup_requirements = ["setuptools_scm"]
     test_requirements = [
