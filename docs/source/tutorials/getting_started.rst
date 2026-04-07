@@ -121,21 +121,22 @@ YAML strings or a path to a YAML file.
 Reading Values
 ==============
 
-There are three ways to read from a ``LayeredConfigTree``, each with different behavior.
+There are four ways to read from a ``LayeredConfigTree``, each with different behavior.
 
 .. note::
 
-    All three access methods can be chained together and/or mixed and matched as desired.
+    All four access methods can be chained together and/or mixed and matched as desired.
 
-Dot access (``tree.key``)
--------------------------
+Dot and bracket notation
+------------------------
 
-Dot access returns the child of the highest-priority layer:
+Both dot access (``tree.key``) and bracket notation (``tree["key"]``) return the 
+child of the highest-priority layer:
 
 .. testcode::
 
-    print(tree.name)            # leaf value
-    print(tree.database)        # tree value
+    print(tree.name)
+    print(tree["database"])
 
 .. testoutput::
 
@@ -150,6 +151,30 @@ Notice that ``host`` returns ``"prod-server"`` (from the ``override`` layer), no
 ``base`` layer, so that value is returned.
 
 A ``ConfigurationKeyError`` will be raised of the requested key does not exist at any layer.
+
+.. note::
+
+    Keys that look like Python dunder attributes (starting and ending with double
+    underscores __) can only be accessed via bracket notation to avoid conflicting
+    with Python’s internal attribute machinery:
+
+    .. testcode::
+
+        answer = LayeredConfigTree({"__special__": 42})
+
+        # Bracket notation works
+        print(answer["__special__"])
+
+        # Dot notation raises an error
+        try:
+            answer.__special__
+        except Exception as e:
+            print(type(e).__name__)
+
+    .. testoutput::
+
+        42
+        ImproperAccessError
 
 get() method access
 -------------------
