@@ -57,6 +57,52 @@ specific layer. Data is provided as a (possibly nested) dictionary:
 The ``source`` parameter is optional metadata that records *where* a value came
 from, which is useful for debugging.
 
+In addition to calling the ``update()`` method, you can update an existing key using
+direct assignment (``=``). This sets the value at the highest-priority layer available
+for that key and records the source as ``None``:
+
+.. testcode::
+
+    t = LayeredConfigTree({"x": 1}, layers=["base", "override"])
+    t.x = 99
+    print(repr(t))
+
+.. testoutput::
+
+    x:
+        override: 99
+            source: None
+        base: 1
+            source: initial data
+
+If there are no more available (unused) layeres for that key, a ``DuplicatedConfigurationError``
+is raised:
+
+.. testcode::
+
+    try:
+        t.x = 88
+    except Exception as e:
+        print(type(e).__name__)
+    
+.. testoutput::
+
+    DuplicatedConfigurationError
+
+New keys **cannot** be created via assignment — you must use :meth:`~layered_config_tree.main.LayeredConfigTree.update`
+for that:
+
+.. testcode::
+
+    try:
+        t.new_key = 5
+    except Exception as e:
+        print(type(e).__name__)
+
+.. testoutput::
+
+    ConfigurationKeyError
+
 In additional to providing data directly, you can initialize or update a tree from 
 YAML strings or a path to a YAML file.
 
