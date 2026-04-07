@@ -57,6 +57,21 @@ specific layer. Data is provided as a (possibly nested) dictionary:
 The ``source`` parameter is optional metadata that records *where* a value came
 from, which is useful for debugging.
 
+In additional to providing data directly, you can initialize or update a tree from 
+YAML strings or a path to a YAML file.
+
+.. testcode::
+
+    print(LayeredConfigTree("server:\n  host: localhost\n  port: 8080\n"))
+
+.. testoutput::
+
+    server:
+        host:
+            base: localhost
+        port:
+            base: 8080
+
 Reading Values
 ==============
 
