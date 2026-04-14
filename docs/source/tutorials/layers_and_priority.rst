@@ -112,6 +112,31 @@ is raised:
     :meth:`~layered_config_tree.main.LayeredConfigTree.get_tree` method always return 
     the highest-priority values.
 
+.. note::
+
+    The interaction between the :meth:`~layered_config_tree.main.LayeredConfigTree.get`
+    ``default_value`` and ``layer`` arguments may sometimes be a cause of confusion. 
+    The ``default_value`` at a requested ``layer`` will only be returned *if the requested 
+    value does not exist at all at any layer*. If the requested value *does* exist - 
+    just not at the requested layer - then you’ll get a ``MissingLayerError``.
+
+    .. testcode::
+
+        # url does not exist at any layer, so default_value is returned
+        print(config.get("url", default_value="http://example.com", layer="overrides"))
+
+        # port exists at base layer but not override layer, so MissingLayerError is raised
+        try:
+            print(config.get(["server", "port"], default_value=80, layer="overrides"))
+        except Exception as e:
+            print(type(e).__name__)
+
+
+    .. testoutput::
+
+        http://example.com
+        MissingLayerError
+
 No Duplicate Values per Layer
 =============================
 

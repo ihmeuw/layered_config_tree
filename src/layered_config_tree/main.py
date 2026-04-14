@@ -55,7 +55,7 @@ class ConfigNode:
     For example, a simulation may need certain values to always exist, and so
     it will set them up at a "base" layer. Components in the simulation may
     have a different set of priorities and so override the "base" value at
-    a \"component\" level. Finally a user may want to override the simulation
+    a "component" level. Finally a user may want to override the simulation
     and component defaults with values at the command line or interactively,
     and so those values will be set in a final "user" layer.
 

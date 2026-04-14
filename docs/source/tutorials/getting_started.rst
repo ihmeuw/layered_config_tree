@@ -26,14 +26,12 @@ At its simplest, a tree can be created from a dictionary:
         base: hello
 
 Note in the example above that by default a single `"base"` layer is used. You can 
-also specify layers in order from lowest to highest priority:
+also specify layers in order from lowest to highest priority. For more on layers and
+priority, see :ref:`layers_and_priority_tutorial`.
 
-.. testcode::
+.. note::
 
-    tree = LayeredConfigTree(layers=["base", "override"])
-
-We now have an empty tree with two layers, ``"base"`` and ``"override"``, where ``"override"``
-has the higher priority (because it is later in the list of layers provided).
+    Layers only pertain to values, not to sub-trees.
 
 Adding Data
 ===========
@@ -43,6 +41,7 @@ specific layer. Data is provided as a (possibly nested) dictionary:
 
 .. testcode::
 
+    tree = LayeredConfigTree(layers=["base", "override"])
     tree.update(
         {"name": "some_service", "database": {"host": "localhost", "port": 5432}},
         layer="base",
@@ -75,7 +74,7 @@ for that key and records the source as ``None``:
         base: 1
             source: initial data
 
-If there are no more available (unused) layeres for that key, a ``DuplicatedConfigurationError``
+If a value has already been set for that key at the highest priority level, a ``DuplicatedConfigurationError``
 is raised:
 
 .. testcode::
@@ -176,6 +175,40 @@ A ``ConfigurationKeyError`` will be raised of the requested key does not exist a
         42
         ImproperAccessError
 
+.. note::
+
+    Keys that are not valid Python variable names (e.g. those containing spaces or
+    special characters) can also only be accessed via bracket notation:
+    
+    .. testcode::
+
+        weird = LayeredConfigTree({"space key": "foo", "dash-key": "bar"})
+
+        # Bracket notation works
+        print(weird["space key"])
+        print(weird["dash-key"])
+
+    .. testoutput::
+
+        foo
+        bar
+
+    Dot notation will not work for these keys. ``weird.space key`` is a
+    ``SyntaxError`` (Python cannot parse it at all), and ``weird.dash-key`` is
+    interpreted as ``weird.dash - key``, which raises a ``ConfigurationKeyError``
+    because ``"dash"`` is not a key in the tree.
+
+    .. testcode::
+
+        try:
+            print(weird.dash-key)
+        except Exception as e:
+            print(type(e).__name__)
+
+    .. testoutput::
+
+        ConfigurationKeyError
+
 get() method access
 -------------------
 
@@ -199,36 +232,13 @@ raising an error. It also accepts a list of keys for nested lookups and supports
     fallback
     prod-server
     localhost
-
-.. note::
-
-    The interaction between ``default_value`` and ``layer`` may sometimes be a cause
-    of confusion. The ``default_value`` at a requested ``layer`` will only be returned 
-    *if the requested value does not exist at all*. If the requested value *does* exist - 
-    just not at the requested layer - then you’ll get a ``MissingLayerError``.
-
-    .. testcode::
-
-        # url does not exist anywhere in the tree, so default_value is returned
-        print(tree.get(["database", "url"], layer="override", default_value="missing"))
-
-        # port exists at base layer but not override layer, so MissingLayerError is raised
-        try:
-             tree.get(["database", "port"], layer="override", default_value="missing")
-        except Exception as e:
-            print(type(e).__name__)
-
-    .. testoutput::
-
-        missing
-        MissingLayerError
        
 get_tree() method access
 ------------------------
 
 :meth:`~layered_config_tree.main.LayeredConfigTree.get_tree` *guarantees* the result 
-is a sub-tree and consists of all of the highest-priority values; it does *not*
-support a ``layer`` argument or return a default value like :meth:`~layered_config_tree.main.LayeredConfigTree.get`.
+is a sub-tree. Note that it does *not* support a ``layer`` argument or return a default
+value like :meth:`~layered_config_tree.main.LayeredConfigTree.get`.
 
 .. testcode::
 
