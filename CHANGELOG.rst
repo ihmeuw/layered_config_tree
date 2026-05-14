@@ -1,3 +1,20 @@
+**4.1.8 - 05/13/26**
+
+Final release. This repository is being archived; future development of this code
+continues in the `vivarium-suite <https://github.com/ihmeuw/vivarium-suite>`_ monorepo
+under ``libs/config-tree/``, where the package is published as ``vivarium-config-tree``
+and imported as ``vivarium.config_tree``. The primary class ``LayeredConfigTree`` has
+been renamed to ``ConfigTree`` (the old name remains available as a deprecated alias
+that emits a ``DeprecationWarning``).
+
+This release ships no Python code to PyPI; it exists only to declare
+``vivarium-config-tree>=5.0.0`` as a dependency. ``pip install layered_config_tree``
+will transparently install ``vivarium-config-tree``, and existing ``import
+layered_config_tree`` code will continue to (temporarily) work via the ``vivarium-compat`` 
+import shim (with a ``DeprecationWarning``).
+
+See the README for migration steps.
+
 **4.1.7 - 05/11/26**
 
  - Type hint: Remove unused ignore
