@@ -2,8 +2,6 @@
 Layered Config Tree
 ===================
 
-----
-
 **NOTE: This repository has been archived.**
 
 Development has moved to the `vivarium-suite monorepo
@@ -43,7 +41,8 @@ The class rename is a *two-step* migration when consumed through the import shim
 deprecation warnings entirely, update both the import path and the class name to
 their new forms above.
 
-----
+Original package overview
+=========================
 
 Layered Config Tree is a configuration structure that supports cascading layers.
 
