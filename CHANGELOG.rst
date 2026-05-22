@@ -1,4 +1,23 @@
+
+**4.2.0 - 05/22/26**
+
+Temporary shim release. This is a backward-compatibility shim - it exists only so
+``pip install layered_config_tree`` continues to resolve. The real package has been renamed
+to ``vivarium-config-tree`` and the import path has moved to ``vivarium.config_tree``.
+
+- Installing this version pulls in ``vivarium-config-tree>=5.0.5`` and ``vivarium-compat>=0.6.0``
+  (an import hook that redirects ``import layered_config_tree`` to the ``vivarium.config_tree.*``
+  equivalent with a ``DeprecationWarning``).
+- The standalone ``ihmeuw/layered_config_tree`` repository has been archived; development
+  continues in the ``ihmeuw/vivarium-suite`` monorepo under ``libs/config-tree/``.
+
+A future release will remove the code completely. We are keeping it temporarily
+to allow for ReadtheDocs builds to continue to resolve for downstream packages that
+are linking to ``layered_config_tree``.
+
 **4.1.8 - 05/13/26**
+
+YANKED.
 
 Final release. This repository is being archived; future development of this code
 continues in the `vivarium-suite <https://github.com/ihmeuw/vivarium-suite>`_ monorepo
