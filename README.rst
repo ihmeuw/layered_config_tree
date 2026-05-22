@@ -4,42 +4,54 @@ Layered Config Tree
 
 **NOTE: This repository has been archived.**
 
-Development has moved to the `vivarium-suite monorepo
-<https://github.com/ihmeuw/vivarium-suite>`_, where this code now lives at
-``libs/config-tree/``. The package has been renamed and is published as
-``vivarium-config-tree`` on PyPI and imported as ``vivarium.config_tree``. The
-primary class ``LayeredConfigTree`` has been renamed to ``ConfigTree``.
+The ``layered_config_tree`` package has been renamed and migrated into the
+`vivarium-suite monorepo <https://github.com/ihmeuw/vivarium-suite>`_.
 
-This repository's final release is v4.1.8: a shim that contains no code and only
-declares ``vivarium-config-tree>=5.0.0`` as a dependency. No further releases will
-be cut from this repository. File issues and PRs against ``vivarium-suite`` instead.
+What changed
+------------
 
-**Existing users do not need to change anything immediately.** ``pip install
-layered_config_tree`` continues to work (the v4.1.8 shim transparently installs
-``vivarium-config-tree``), and ``import layered_config_tree`` continues to work (temporarily)
-via the ``vivarium-compat`` import shim (with a ``DeprecationWarning``). Update at
-your own pace.
+- **PyPI distribution:** ``layered_config_tree`` -> ``vivarium-config-tree``
+- **Import path:** ``layered_config_tree`` -> ``vivarium.config_tree``
+- **Source:** ``ihmeuw/layered_config_tree`` (archived) ->
+  ``ihmeuw/vivarium-suite`` (under ``libs/config-tree/``)
+- **Docs:** https://vivarium-config-tree.readthedocs.io/
 
-To migrate fully to the new package:
+What this last release (v4.2.0) is
+----------------------------------
+
+A backward-compatibility shim; installing it pulls in:
+
+- ``vivarium-engine>=5.0.0`` - the real implementation under the new import path.
+- ``vivarium-compat>=0.6.0`` - an import hook that lets ``import vivarium``
+  continue to work, emitting a ``DeprecationWarning``. Update your imports before
+  the hook is removed.
+
+If you depend on a specific pre-rename version (e.g. ``vivarium==4.1.5``),
+pin to that version - those earlier releases still ship the original module
+and continue to install standalone.
+
+To migrate fully to the new package
+-----------------------------------
 
 **Install:**
 
 .. code-block:: bash
 
-   pip install vivarium-config-tree   # was: pip install layered_config_tree
+    pip install vivarium-engine  # was: pip install vivarium
 
 **Import:**
 
 .. code-block:: python
 
-   import vivarium.config_tree                       # was: import layered_config_tree
-   from vivarium.config_tree import ConfigTree       # was: from layered_config_tree import LayeredConfigTree
+    import vivarium.engine  # was: import vivarium
 
-The class rename is a *two-step* migration when consumed through the import shim:
-``from layered_config_tree import LayeredConfigTree`` still works because
-``LayeredConfigTree`` is kept as a deprecated alias on the new module. To clear the
-deprecation warnings entirely, update both the import path and the class name to
-their new forms above.
+.. note::
+    
+    The class rename is a *two-step* migration when consumed through the import shim:
+    ``from layered_config_tree import LayeredConfigTree`` still works because
+    ``LayeredConfigTree`` is kept as a deprecated alias on the new module. To clear the
+    deprecation warnings entirely, update both the import path and the class name to
+    their new forms above.
 
 Original package overview
 =========================

@@ -1,0 +1,15 @@
+# Sphinx build dependencies for the legacy layered_config_tree docs on RTD.
+# These match the deps the pre-archive setup.py exposed via the [docs] extra.
+sphinx<9.0.0
+sphinx-autodoc-typehints
+sphinx-rtd-theme>=2.0.0
+sphinx-click
+ipython
+matplotlib
+sphinxcontrib-video
+
+# Legacy runtime dep. The 4.2.0 metapackage no longer carries this (and we
+# deliberately don't pip-install it for docs builds; see .readthedocs.yaml).
+# This is the only third-party dep needed for sphinx-autodoc to walk the
+# in-tree src/layered_config_tree/ on this archive branch.
+pyyaml

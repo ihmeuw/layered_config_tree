@@ -1,0 +1,27 @@
+# This is the version for the readthedocs configuration. Version 2 ignores
+# web-based configuration and uses everything from this file.
+version: 2
+# Doc builds will fail if there are any warnings
+sphinx:
+  configuration: docs/source/conf.py
+  fail_on_warning: true
+
+# Configure the python version and environment construction run before
+# docs are built.
+build:
+  os: ubuntu-22.04
+  tools:
+    python: "3.13"
+python:
+  install:
+      # NOTE: we deliberately do NOT `pip install .` here. The 4.2.0+
+      # metapackage pulls in vivarium-compat, whose import hook redirects
+      # layered_config_tree -> vivarium.config_tree. That breaks the legacy
+      # `import layered_config_tree` chain we need for autodoc on this
+      # archive branch. Instead we install just the sphinx + legacy runtime
+      # deps directly; conf.py prepends src/ to sys.path and writes
+      # _version.py.
+    - requirements: docs/requirements.txt
+
+formats:
+  - pdf
