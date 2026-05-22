@@ -19,17 +19,17 @@ from pathlib import Path
 
 # The 4.2.0+ layered_config_tree PyPI distribution is a metapackage that ships
 # no code, so the legacy module is not importable from site-packages on this
-# branch. Prepend the in-tree src/ layout so sphinx-autodoc can import the
-# pre-monorepo source directly for docs builds on this archive branch.
-_SRC_DIR = Path(__file__).resolve().parents[2] / "src"
-sys.path.insert(0, str(_SRC_DIR))
+# branch. Prepend the in-tree archive/ layout (the pre-monorepo source, kept
+# only for RTD/intersphinx) so sphinx-autodoc can import it directly.
+_ARCHIVE_DIR = Path(__file__).resolve().parents[2] / "archive"
+sys.path.insert(0, str(_ARCHIVE_DIR))
 
-# src/layered_config_tree/_version.py is gitignored and is normally written
-# at install time by setuptools_scm. Since the docs build deliberately does
-# NOT pip-install the project (to avoid pulling in vivarium-compat, whose
-# import hook would redirect layered_config_tree imports and break autodoc
-# on the legacy tree), we write it here with the archive version.
-_version_file = _SRC_DIR / "layered_config_tree" / "_version.py"
+# archive/layered_config_tree/_version.py is gitignored and is normally
+# written at install time by setuptools_scm. Since the docs build deliberately
+# does NOT pip-install the project (to avoid pulling in vivarium-compat,
+# whose import hook would redirect layered_config_tree imports and break
+# autodoc on the legacy tree), we write it here with the archive version.
+_version_file = _ARCHIVE_DIR / "layered_config_tree" / "_version.py"
 if not _version_file.exists():
     _version_file.write_text('__version__ = "4.2.0"\n')
 

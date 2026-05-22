@@ -24,11 +24,12 @@ setup(
     packages=[],
     py_modules=[],
     # `write_to` is a build-time side effect: it writes _version.py into the
-    # in-tree src/ layout so local `pip install -e .` works for anyone
-    # exercising the legacy source on this branch. The file is NOT included
-    # in the wheel itself (packages=[] keeps it a pure metapackage).
+    # in-tree archive/ layout (the pre-monorepo source, kept on this branch
+    # only so ReadTheDocs can keep building legacy docs for downstream
+    # intersphinx). The file is NOT included in the wheel itself
+    # (packages=[] keeps it a pure metapackage).
     use_scm_version={
-        "write_to": "src/layered_config_tree/_version.py",
+        "write_to": "archive/layered_config_tree/_version.py",
         "write_to_template": '__version__ = "{version}"\n',
         "tag_regex": r"^(?P<prefix>v)?(?P<version>[^\+]+)(?P<suffix>.*)?$",
     },
