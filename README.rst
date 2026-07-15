@@ -17,14 +17,16 @@ What changed
   ``ihmeuw/vivarium-suite`` (under ``libs/config-tree/``)
 - **Docs:** https://vivarium-config-tree.readthedocs.io/
 
-The final release on PyPI (``v4.1.9``) ships the same code as ``v4.1.7`` with
-this banner added. There is no compat shim - ``pip install layered_config_tree``
-will keep resolving and importing as it did in ``v4.1.7``, but the code is
-frozen and will not receive updates. New work should install
-``vivarium-config-tree`` and import from ``vivarium.config_tree``.
+The final release on PyPI (``v4.1.9``) ships the same code as ``v4.1.7`` (``v4.1.8``
+is a yanked version that included now-abandoned backwards compatibility shims) with
+this banner added. ``pip install layered_config_tree`` will keep resolving and
+importing as it did in ``v4.1.7``, but the code is frozen and will not receive
+updates.
 
 To migrate fully to the new package
 -----------------------------------
+
+New development should install ``vivarium-config-tree`` and import from ``vivarium.config_tree``.
 
 **Install:**
 
