@@ -1,10 +1,20 @@
 **4.1.9 - 07/15/26**
 
-Final release. Adds an archive banner to the README pointing at the
-``vivarium-suite`` monorepo (``libs/config-tree/``, published as
-``vivarium-config-tree``). Ships the same code as ``v4.1.7`` - no compat shim,
-no code changes. (``v4.1.8`` is yanked on PyPI; skipping directly to ``v4.1.9``.)
-Future development happens in ``vivarium-config-tree``.
+Final release. Adds an archive banner to the README pointing at the ``vivarium-suite``
+monorepo (``libs/config-tree/``, published as ``vivarium-config-tree``).
+
+**4.2.0 - 05/22/26** (YANKED)
+
+Metapackage/shim approach: shipped no code and pulled ``vivarium-config-tree``
++ ``vivarium-compat`` to bridge ``import layered_config_tree`` to
+``vivarium.config_tree``. Yanked because the team abandoned the compat-bridge
+path; the final release of this repo is ``v4.1.9`` instead, which ships
+``v4.1.7``'s code with an archive banner.
+
+**4.1.8 - 05/13/26** (YANKED)
+
+Final-release attempt that was superseded by the metapackage-shim ``v4.2.0``
+approach a week later. Both were subsequently yanked.
 
 **4.1.7 - 05/11/26**
 
