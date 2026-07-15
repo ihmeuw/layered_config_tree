@@ -1,3 +1,11 @@
+**4.1.9 - 07/15/26**
+
+Final release. Adds an archive banner to the README pointing at the
+``vivarium-suite`` monorepo (``libs/config-tree/``, published as
+``vivarium-config-tree``). Ships the same code as ``v4.1.7`` - no compat shim,
+no code changes. (``v4.1.8`` is yanked on PyPI; skipping directly to ``v4.1.9``.)
+Future development happens in ``vivarium-config-tree``.
+
 **4.1.7 - 05/11/26**
 
  - Type hint: Remove unused ignore
